@@ -62,6 +62,18 @@ LABEL_COLOURS = {
 DEFAULT_COLOUR = "ededed"
 TITLE_RE = re.compile(r"^\[(PET-\d+|PR-\d+)\]")
 
+# Backported after this repository's migration had already completed, from the
+# second run where GitHub returned a 500 on a label POST and the blanket rule
+# below turned it into a dead stop. Nothing here behaves differently for the run
+# recorded in run-logs/ - that run saw no 5xx at all.
+#
+# POSTs safe to retry after a 5xx, because repeating them cannot create a second
+# anything: a label that already exists answers 422 (tolerated below, and phase 1
+# skips existing names anyway), and adding an assignee who is already assigned is
+# a no-op. Creating an issue or a comment is NOT in this set - that is what the
+# blanket rule exists for.
+POST_RETRY_SAFE = ("/labels", "/assignees")
+
 TOKEN = None
 
 
@@ -105,7 +117,11 @@ def req(method, path, body=None, graphql=False, tolerate=(), _tries=0):
             raise SystemExit(
                 f"403 that is NOT a rate limit on {method} {path} - check token "
                 f"scopes and repo permissions.\n{raw[:600]}")
-        safe = is_limit or method in ("GET", "PATCH", "PUT")
+        # 422 on a label we were creating means it is already there - success.
+        if e.code == 422 and path.endswith("/labels") and "already_exists" in low:
+            return {"tolerated": True}
+        idempotent_post = method == "POST" and path.endswith(POST_RETRY_SAFE)
+        safe = is_limit or idempotent_post or method in ("GET", "PATCH", "PUT")
         if safe and _tries < 8:
             ra = (e.headers.get("Retry-After") or "").strip()
             reset = e.headers.get("x-ratelimit-reset")

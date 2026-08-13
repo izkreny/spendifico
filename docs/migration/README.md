@@ -124,7 +124,12 @@ not.
 
 ## Re-running or extending
 
-`scripts/` holds the six scripts exactly as they ran, byte-identical. They need the Jira and GitHub
+`scripts/` holds the six scripts that ran, with one later change: `apply.py` was
+backported from a second migration where GitHub returned a 500 on a label POST and the
+no-retry-on-5xx rule turned it into a dead stop. Label and assignee POSTs may now retry;
+issue and comment creation still may not, because a retry there could duplicate silently.
+That run saw no 5xx at all, so nothing about what is recorded in `run-logs/` changes -
+but these are no longer byte-for-byte the bytes that executed. They need the Jira and GitHub
 export, which is **not committed** - it is 11MB and contains personal email addresses. It lives
 outside version control in `docs/.migration/`, which `docs/.gitignore` keeps out of the repository
 by its standing rule that every hidden path under `docs/` is local-only.
