@@ -1,0 +1,53 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+jobs:
+  claude-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        id: claude-review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # track_progress creates a comment on the PR and exposes the
+          # mcp__github_comment__update_claude_comment tool to fill it in.
+          # The review MUST be posted through that tool: `gh pr comment` is
+          # listed under "ask" in .claude/settings.json, and ask rules beat
+          # --allowed-tools, so in headless CI that command is always denied.
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Adopt the reviewer persona defined in .claude/agents/linus-reviewer.md,
+            with one exception: that file forbids tool use because it was written
+            for an inline agent, but here you MUST use the allowed tools to read
+            the PR and to post the review.
+
+            Steps:
+            1. Read .claude/agents/linus-reviewer.md and adopt the persona.
+            2. Gather context: `gh pr view` and `gh pr diff` for the PR number above.
+            3. Write the review using the persona's "final consolidated verdict"
+               output format.
+            4. Publish it by updating the Claude tracking comment on the PR via
+               the mcp__github_comment__update_claude_comment tool. Do NOT use
+               `gh pr comment` or `gh pr review`; the updated tracking comment
+               is the entire deliverable.
+          claude_args: '--allowed-tools "Read,Grep,Glob,Bash(gh pr view:*),Bash(gh pr diff:*),mcp__github_comment__update_claude_comment"'
+          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
+          # or https://code.claude.com/docs/en/cli-reference for available options

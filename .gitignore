@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Local / secret config — commit only the *.example variants
+.mcp.json
+.claude/settings.local.json
+
+# Vercel CLI link. Created by `vercel link` / `vercel dev` and holds the project
+# and org ids for whoever ran it, so it is per-person, not per-repo.
+.vercel
+
+# Logs
+*.log
+npm-debug.log*
