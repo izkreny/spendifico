@@ -3,10 +3,10 @@ name: repo-review-prs
 description: This skill should be used when the user asks to "review all open PRs", "review unreviewed PRs", "review PR #N", or "check what PRs need review". Fetches open PRs, skips already-reviewed ones, and runs a full interactive review on each unreviewed PR, posting inline comments directly to GitHub.
 argument-hint: "[PR number | all]"
 disable-model-invocation: true
-allowed-tools: Bash(gh:*), Read, Grep, Glob, mcp__claude_ai_Atlassian__getAccessibleAtlassianResources, mcp__claude_ai_Atlassian__getJiraIssue, mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql, mcp__mcp-atlassian__jira_get_issue, mcp__mcp-atlassian__jira_search
+allowed-tools: Bash(gh:*), Read, Grep, Glob
 ---
 
-> **Tools used:** `Bash(gh:*)`, `Read`, `Grep`, `Glob`, and a Jira get-issue tool (`getJiraIssue` on the connector, `jira_get_issue` self-hosted) - fetches PR list and diffs via the `gh` CLI, loads Jira ticket context, posts inline comments to GitHub.
+> **Tools used:** `Bash(gh:*)`, `Read`, `Grep`, `Glob` - fetches PR list, diffs and issue context via the `gh` CLI, and posts inline comments to GitHub.
 
 > **Output format:** All console output must be plain text - no markdown syntax (`**bold**`, `## headers`, `---` rules, or backtick fences). Use plain ASCII characters and box-drawing lines (`─`, `│`) for structure. Markdown is only acceptable inside the `body` strings sent to the GitHub API.
 
@@ -32,9 +32,7 @@ If it runs but exits non-zero, stop and tell the user: "`gh` is installed but no
 
 Do not attempt the review without `gh`; every later step depends on it.
 
-If no Jira MCP server is available, continue in degraded mode - skip Jira enrichment and note "Jira context unavailable" in the per-PR summary rather than aborting. Two setups can supply it (see `.claude/skills/repo-jira/references/jira-access.md`): the Atlassian connector (`getJiraIssue`, needs a `cloudId` from `getAccessibleAtlassianResources`) or a self-hosted server (`jira_get_issue`). Use whichever is present.
-
-> **In headless runs, expect no Jira.** The connector is authorized interactively, so it is typically unavailable under `claude --print` or cron. Degraded mode is the normal path there, not an error. If you need Jira context in automation, use the self-hosted setup.
+Issue context comes from the same `gh` you just checked, so there is no second thing to authenticate and nothing to degrade to when an MCP server is absent. This is the practical gain from retiring the Jira MCP: a headless run under `claude --print` or cron now gets the same issue context an interactive one does, where the Jira connector was authorized interactively and so was never available there. A branch that carries no issue key at all still yields no context - see Step 2 - but that is a property of the branch, not of the environment.
 
 ## Step 1 - Determine scope
 
@@ -64,7 +62,7 @@ For each PR number, run the interactive review loop:
 
 1. **Load project context** - read root `CLAUDE.md`, the scoped `CLAUDE.md` under `backend/` or `frontend/` for every app the diff touches, and any `docs/agents/` guide the root pointer table names for the change at hand.
 2. **Fetch the PR** - `gh pr view <n>` and `gh pr diff <n>`. If the diff is empty, skip the PR and note it in the summary as "skipped - empty diff".
-3. **Enrich with Jira** - extract the `PET-<n>` key from the branch name (`{type}/PET-{number}-{slug}`) and fetch the ticket for acceptance-criteria context, via `getJiraIssue` (connector) or `jira_get_issue` (self-hosted). Skip silently if neither is available.
+3. **Enrich with the issue** - take the number from the branch name `{type}/GHI-{number}_{slug}`: drop everything up to and including the first `/`, take everything before the first `_`, then strip the `GHI-` prefix. On `feat/GHI-171_retire-jira-tooling` that yields `171`. Read it with `gh issue view <n> --json title,body,labels,parent,blockedBy` for acceptance-criteria context. A branch predating the convention carries `PET-<n>` instead, whose number is **not** the issue number - resolve those by title search (`gh issue list --state all --search "PET-<n>"`) rather than by assuming. Skip silently if neither yields an issue.
 4. **Analyse** against the evaluation criteria below.
 5. **De-duplicate** - read existing PR comments first; do not repeat a point already raised.
 6. **Post inline comments** via `gh api`. Use `REQUEST_CHANGES` for blockers, `COMMENT` for suggestions.
@@ -81,7 +79,7 @@ Review each PR against, in priority order:
 | **Security**      | Untyped external input reaching inward, missing validation at the boundary, leaked secrets, injection                                   |
 | **Architecture**  | KISS / DRY / YAGNI, module boundaries, enums over repeated string literals                                                              |
 | **Test coverage** | New endpoints/components without tests, missing edge-case tests                                                                         |
-| **Conventions**   | Conventional Commits, branch naming, scope (`backend`/`frontend`)                                                                       |
+| **Conventions**   | Conventional Commits, branch naming (`{type}/GHI-{number}_{slug}`), commit trailer `(GHI-<n>)`, scope (`backend`/`frontend`)             |
 
 ## Step 3 - Summary
 

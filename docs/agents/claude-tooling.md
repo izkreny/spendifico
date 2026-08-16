@@ -19,13 +19,19 @@ matching phrases, not registered commands.
 | `repo-dev-setup`  | First-time local setup, both apps. Start here on a fresh clone                                                                                                           |
 | `repo-commit`     | Analyses changes, runs per-app lint/test, writes Conventional Commit messages, guards against committing to `main`                                                       |
 | `repo-secrets`    | Manages `.env` files from templates, explains where real secrets live                                                                                                    |
-| `repo-jira`       | Creates/estimates/transitions Jira issues over MCP. Needs a Jira MCP server; see `.claude/skills/repo-jira/references/jira-access.md` for the two supported setups       |
 | `repo-review-prs` | Fetches open PRs via `gh` and reviews unreviewed ones                                                                                                                    |
 | `repo-stack`      | This repo's stacked-branch wiring: the layers of truth, the worktree trap, the conventions. CLI mechanics live in the committed official `gh-stack` skill                |
 | `repo-fly`        | Driving the Fly.io deploy through `flyctl` in Bash: when it loads and the traps that bit the initial deploy. The runbook and config themselves live in `docs/guides/deployment.md` and `backend/fly.toml` |
 | `backend-nestjs`  | Passive reference library of NestJS rules, vendored from upstream. Consulted when writing backend code                                                                    |
 | `frontend-nextjs` | Passive reference library of Next.js/React rules, vendored from upstream. Consulted when writing frontend code                                                            |
 | `backend-drizzle` | How Drizzle and Turso are wired in **this** repo: the two migration scopes, the database-per-user consequences, the Turso drivers. Deliberately not a drizzle-kit manual |
+
+**Issue-tracker conventions live in `.claude/gh-issues.md`**, not in a skill. It records this
+repository's label set, what each axis asks, the default that is expressed by carrying no label,
+the milestones, and the mapping from a title's `[LAYER]` prefix to its label. There is no
+`repo-jira` skill any more: Jira stopped being the tracker on 2026-08-13 and its tooling was
+retired on 2026-08-16, so issue work is `gh` in Bash. The consumer of that file is a personal
+skill outside this repository, which is why nothing under `.claude/skills/` names it.
 
 **Agents** (delegated subtasks with their own context): `code-reviewer`, `debugger`,
 `test-automator`, `nestjs-specialist` and `nextjs-specialist` (these two fetch and

@@ -25,7 +25,7 @@ Manage local secrets and configuration for the two apps in this repo via per-app
 | `backend/.env.example` / `frontend/.env.example` | ✅ yes | variable names + placeholders, no real values |
 | `backend/.env` | ❌ never | real local values, read by `ConfigModule` |
 | `frontend/.env.local` | ❌ never | real local values, read by Next.js |
-| `.mcp.json` | ❌ never | MCP server credentials (see `.mcp.json.example`) |
+| `.mcp.json` | ❌ never | your local MCP server list; the committed `.mcp.json.example` holds no credentials today, but any server you add may need them |
 | Team secret manager / vault | n/a (external) | the authoritative real values |
 
 > Note the filename difference between the apps: Next.js reads **`.env.local`** in `frontend/`, while Nest reads **`.env`** in `backend/`. Both are gitignored.
@@ -85,7 +85,7 @@ git check-ignore backend/.env frontend/.env.local
 Both should be reported as ignored. If not, stop and fix `.gitignore` before doing anything else. Only the `.env.example` change should be staged and committed:
 
 ```
-chore(backend): document X_API_KEY in .env.example (PET-xxx)
+chore(backend): document X_API_KEY in .env.example (GHI-xxx)
 ```
 
 ---

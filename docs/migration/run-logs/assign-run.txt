@@ -1,0 +1,169 @@
+assigning 162 of 162 issues (~19 min)
+
+  [  1/162] #9    PET-8   <- AntePrkacin
+  [  2/162] #10   PET-9   <- AntePrkacin
+  [  3/162] #11   PET-10  <- AntePrkacin
+  [  4/162] #12   PET-11  <- AntePrkacin
+  [  5/162] #13   PET-12  <- AntePrkacin
+  [  6/162] #14   PET-13  <- izkreny
+  [  7/162] #15   PET-14  <- izkreny
+  [  8/162] #16   PET-15  <- AntePrkacin
+  [  9/162] #17   PET-16  <- AntePrkacin
+  [ 10/162] #18   PET-17  <- AntePrkacin
+  [ 11/162] #19   PET-18  <- AntePrkacin
+  [ 12/162] #20   PET-19  <- AntePrkacin
+  [ 13/162] #21   PET-20  <- izkreny
+  [ 14/162] #22   PET-21  <- izkreny
+  [ 15/162] #23   PET-22  <- izkreny
+  [ 16/162] #24   PET-23  <- izkreny
+  [ 17/162] #25   PET-24  <- izkreny
+  [ 18/162] #26   PET-25  <- izkreny
+  [ 19/162] #27   PET-26  <- izkreny
+  [ 20/162] #28   PET-27  <- izkreny
+  [ 21/162] #29   PET-28  <- izkreny
+  [ 22/162] #30   PET-29  <- AntePrkacin
+  [ 23/162] #31   PET-30  <- AntePrkacin
+  [ 24/162] #32   PET-31  <- AntePrkacin
+  [ 25/162] #33   PET-32  <- AntePrkacin
+  [ 26/162] #34   PET-33  <- AntePrkacin
+  [ 27/162] #35   PET-34  <- AntePrkacin
+  [ 28/162] #36   PET-35  <- izkreny
+  [ 29/162] #37   PET-36  <- AntePrkacin
+  [ 30/162] #38   PET-37  <- AntePrkacin
+  [ 31/162] #39   PET-38  <- AntePrkacin
+  [ 32/162] #40   PET-39  <- AntePrkacin
+  [ 33/162] #41   PET-40  <- izkreny
+  [ 34/162] #42   PET-41  <- izkreny
+  [ 35/162] #43   PET-42  <- izkreny
+  [ 36/162] #44   PET-43  <- izkreny
+  [ 37/162] #45   PET-44  <- izkreny
+  [ 38/162] #46   PET-45  <- izkreny
+  [ 39/162] #47   PET-46  <- AntePrkacin
+  [ 40/162] #48   PET-47  <- AntePrkacin
+  [ 41/162] #49   PET-48  <- AntePrkacin
+  [ 42/162] #50   PET-49  <- AntePrkacin
+  [ 43/162] #51   PET-50  <- izkreny
+  [ 44/162] #52   PET-51  <- izkreny
+  [ 45/162] #53   PET-52  <- AntePrkacin
+  [ 46/162] #54   PET-53  <- izkreny
+  [ 47/162] #55   PET-54  <- izkreny
+  [ 48/162] #56   PET-55  <- izkreny
+  [ 49/162] #57   PET-56  <- izkreny
+  [ 50/162] #58   PET-57  <- izkreny
+  [ 51/162] #59   PET-58  <- izkreny
+  [ 52/162] #60   PET-59  <- izkreny
+  [ 53/162] #61   PET-60  <- izkreny
+  [ 54/162] #62   PET-61  <- izkreny
+  [ 55/162] #63   PET-62  <- izkreny
+  [ 56/162] #64   PET-63  <- izkreny
+  [ 57/162] #65   PET-64  <- AntePrkacin
+  [ 58/162] #66   PET-65  <- izkreny
+  [ 59/162] #67   PET-66  <- izkreny
+  [ 60/162] #68   PET-67  <- AntePrkacin
+  [ 61/162] #69   PET-69  <- izkreny
+  [ 62/162] #70   PET-70  <- AntePrkacin
+  [ 63/162] #71   PET-71  <- izkreny
+  [ 64/162] #72   PET-72  <- izkreny
+  [ 65/162] #73   PET-73  <- izkreny
+  [ 66/162] #74   PET-74  <- AntePrkacin
+  [ 67/162] #75   PET-75  <- izkreny
+  [ 68/162] #76   PET-76  <- izkreny
+  [ 69/162] #77   PET-77  <- AntePrkacin
+  [ 70/162] #78   PET-78  <- izkreny
+  [ 71/162] #79   PET-79  <- izkreny
+  [ 72/162] #80   PET-80  <- izkreny
+  [ 73/162] #81   PET-81  <- izkreny
+  [ 74/162] #82   PET-82  <- izkreny
+  [ 75/162] #83   PET-83  <- izkreny
+  [ 76/162] #84   PET-84  <- izkreny
+  [ 77/162] #85   PET-85  <- izkreny
+  [ 78/162] #86   PR-1    <- izkreny, AntePrkacin
+  [ 79/162] #87   PR-2    <- izkreny
+  [ 80/162] #88   PR-3    <- izkreny
+  [ 81/162] #89   PR-4    <- AntePrkacin
+  [ 82/162] #90   PR-5    <- AntePrkacin
+  [ 83/162] #91   PR-6    <- izkreny
+  [ 84/162] #92   PR-8    <- izkreny
+  [ 85/162] #93   PR-9    <- AntePrkacin
+  [ 86/162] #94   PR-10   <- izkreny
+  [ 87/162] #95   PR-11   <- izkreny
+  [ 88/162] #96   PR-12   <- AntePrkacin
+  [ 89/162] #97   PR-14   <- izkreny
+  [ 90/162] #98   PR-15   <- AntePrkacin
+  [ 91/162] #99   PR-16   <- izkreny
+  [ 92/162] #100  PR-17   <- izkreny
+  [ 93/162] #101  PR-18   <- AntePrkacin
+  [ 94/162] #102  PR-19   <- izkreny
+  [ 95/162] #103  PR-20   <- AntePrkacin
+  [ 96/162] #104  PR-21   <- izkreny
+  [ 97/162] #105  PR-22   <- izkreny
+  [ 98/162] #106  PR-23   <- izkreny
+  [ 99/162] #107  PR-24   <- izkreny
+  [100/162] #108  PR-26   <- AntePrkacin
+  [101/162] #109  PR-27   <- izkreny, AntePrkacin
+  [102/162] #110  PR-28   <- AntePrkacin
+  [103/162] #111  PR-29   <- AntePrkacin
+  [104/162] #112  PR-30   <- AntePrkacin
+  [105/162] #113  PR-32   <- izkreny
+  [106/162] #114  PR-33   <- izkreny
+  [107/162] #115  PR-34   <- izkreny
+  [108/162] #116  PR-36   <- izkreny
+  [109/162] #117  PR-37   <- izkreny
+  [110/162] #118  PR-38   <- izkreny
+  [111/162] #119  PR-39   <- AntePrkacin
+  [112/162] #120  PR-40   <- izkreny
+  [113/162] #121  PR-41   <- izkreny
+  [114/162] #122  PR-42   <- izkreny
+  [115/162] #123  PR-43   <- AntePrkacin
+  [116/162] #124  PR-44   <- AntePrkacin
+  [117/162] #125  PR-46   <- AntePrkacin
+  [118/162] #126  PR-47   <- izkreny
+  [119/162] #127  PR-48   <- AntePrkacin
+  [120/162] #128  PR-50   <- izkreny
+  [121/162] #129  PR-51   <- izkreny
+  [122/162] #130  PR-52   <- izkreny
+  [123/162] #131  PR-53   <- izkreny
+  [124/162] #132  PR-54   <- izkreny
+  [125/162] #133  PR-55   <- izkreny
+  [126/162] #134  PR-57   <- izkreny
+  [127/162] #135  PR-58   <- izkreny
+  [128/162] #136  PR-59   <- AntePrkacin
+  [129/162] #137  PR-60   <- AntePrkacin
+  [130/162] #138  PR-61   <- izkreny
+  [131/162] #139  PR-62   <- izkreny
+  [132/162] #140  PR-63   <- AntePrkacin
+  [133/162] #141  PR-64   <- izkreny
+  [134/162] #142  PR-65   <- izkreny
+  [135/162] #143  PR-66   <- izkreny
+  [136/162] #144  PR-67   <- AntePrkacin
+  [137/162] #145  PR-68   <- AntePrkacin
+  [138/162] #146  PR-70   <- izkreny
+  [139/162] #147  PR-71   <- izkreny
+  [140/162] #148  PR-72   <- izkreny
+  [141/162] #149  PR-74   <- AntePrkacin
+  [142/162] #150  PR-75   <- izkreny
+  [143/162] #151  PR-76   <- izkreny
+  [144/162] #152  PR-77   <- AntePrkacin
+  [145/162] #153  PR-78   <- izkreny
+  [146/162] #154  PR-79   <- izkreny
+  [147/162] #155  PR-80   <- AntePrkacin
+  [148/162] #156  PR-81   <- AntePrkacin
+  [149/162] #157  PR-82   <- AntePrkacin
+  [150/162] #158  PR-84   <- izkreny
+  [151/162] #159  PR-85   <- AntePrkacin
+  [152/162] #160  PR-86   <- izkreny
+  [153/162] #161  PR-87   <- AntePrkacin
+  [154/162] #162  PR-88   <- izkreny
+  [155/162] #163  PR-89   <- AntePrkacin
+  [156/162] #164  PR-90   <- AntePrkacin
+  [157/162] #165  PR-91   <- izkreny
+  [158/162] #166  PR-92   <- izkreny
+  [159/162] #167  PR-93   <- izkreny
+  [160/162] #168  PR-94   <- izkreny
+  [161/162] #169  PR-95   <- izkreny
+  [162/162] #170  PR-96   <- izkreny
+
+verifying against the live tracker...
+  all 162 match
+
+DONE in 22.1 min

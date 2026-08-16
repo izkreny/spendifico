@@ -224,7 +224,7 @@ behind a pointer.
 
 **Branching and committing**
 
-- **Never commit or push directly to `main`.** Branch first, as `{type}/PET-{number}-{slug}`.
+- **Never commit or push directly to `main`.** Branch first, as `{type}/GHI-{number}_{slug}`.
 - **Read `git branch --show-current` immediately before `git commit`**, and read the
   `[branch sha]` line the commit prints back. HEAD has silently moved to `main` mid-session
   before.
@@ -232,7 +232,7 @@ behind a pointer.
   tasks, not a list of commits.
 - **The first push of a branch is `git push -u origin <branch>`.**
 - **Plans go in `docs/plans/`, never only into the conversation**, named
-  `YYYY-MM-DD_PET-{number}_{slug}.md`. Every plan enumerates the tasks it will carry out as a
+  `YYYY-MM-DD_GHI-{number}_{slug}.md`. Every plan enumerates the tasks it will carry out as a
   checklist, that checklist is copied into the PR body, and the plan is committed **alone** as
   the branch's first commit with a draft PR opened on it.
 
@@ -258,7 +258,8 @@ behind a pointer.
   fresh clone with no build and no network, and they are excluded from the line counts that
   same page reports - a 600KB minified bundle counted as hand-written code would make the page
   measuring this repository one of the largest things in it. `data/tickets.json` is the one
-  exception to "regenerate": no script can write it, because it comes from the Jira MCP.
+  exception to "regenerate": it is a **frozen historical record** of how the work was tracked in
+  Jira, and re-sourcing it from `gh issue list` would silently change what its numbers mean.
 - **After changing anything a request or response body is made of, run `npm run api:sync` from
   the repo root** and commit both artifacts. Drift is a CI failure in two halves.
 
@@ -324,6 +325,7 @@ read the file before you write the change, not after.
 | build one of the remaining access screens                            | `frontend/src/app/CLAUDE.md`, The access screens |
 | change a DTO, a response shape, or how a page fetches               | `docs/agents/api-contract.md`   |
 | branch, commit, push, or touch a stacked branch                     | `docs/CONTRIBUTING.md`          |
+| open, label, close or search an issue, or name a milestone          | `.claude/gh-issues.md`          |
 | write a plan, or carry out any multi-step task                      | `docs/agents/conventions.md`    |
 | use or change a skill, a subagent, or the MCP server                | `docs/agents/claude-tooling.md` |
 | change a permission                                                 | `.claude/SETTINGS.md`           |
