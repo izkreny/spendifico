@@ -162,3 +162,8 @@ gh repo view --web                 # open the repo in a browser
 `gh pr create` reads the branch you are on, so commit and push first. Since this repo
 forbids committing to `main`, the normal flow is: branch, commit, push, `gh pr create`.
 
+Add `--assignee @me` when you open one, and pass `--assignee @me` to `gh issue create` too.
+On a one-person repo that reads as redundant, and inside the repo it is. The value is
+outside it: GitHub's Assigned tab and every `assignee:@me` search are built on that field,
+and unassigned work never appears in them.
+

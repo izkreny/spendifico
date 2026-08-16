@@ -82,6 +82,7 @@ neither, so a pointer would not be executable.
 | Plan file | `docs/plans/YYYY-MM-DD_GHI-{number}_{slug}.md` | `2026-08-16_GHI-171_retire-jira-tooling.md` |
 | Commit trailer | `(GHI-{number})` | `fix(api): reject a blank email (GHI-42)` |
 | PR body | must contain `Closes #{number}` | `Closes #42` |
+| Assignee | always `@me`, on issues and pull requests alike | `--assignee @me` |
 
 **`GHI-` rather than `#{number}` is load-bearing here specifically.** Many of this repository's 588
 commit messages contain a `#NN` that means a pull request in
