@@ -192,11 +192,18 @@ treatment, since database-per-user exists for it.
 ## Plans
 
 **Implementation plans live in `docs/plans/`**, one Markdown file per plan, named
-`YYYY-MM-DD_PET-{number}_{slug}.md` (date the plan was written, the Jira ticket it
-serves, then a short slug), for example `2026-08-02_PET-13_login-links.md`. **Plan into
-that file, never only into the conversation.** Anything worth calling a plan is written
-there before implementation starts, so it is reviewed as a diff and the reasoning
-outlives the session that produced it.
+`YYYY-MM-DD_GHI-{number}_{slug}.md` (date the plan was written, the GitHub issue it
+serves, then a short slug), for example `2026-08-16_GHI-171_retire-jira-tooling.md`.
+**Plan into that file, never only into the conversation.** Anything worth calling a plan
+is written there before implementation starts, so it is reviewed as a diff and the
+reasoning outlives the session that produced it.
+
+**Plans written before 2026-08-16 use `PET-{number}` and are not renamed.** That was the
+Jira key, and every one of those tickets was migrated into this repository's issue
+tracker with its key kept in the title, so `PET-13` still finds the issue it names.
+Renaming them to issue numbers would detach fifty plans from the work they describe and
+gain nothing. Two conventions coexist, and the cutover date is the only thing you need to
+tell them apart.
 
 **Every plan enumerates the tasks it will carry out**, as an explicit checklist of the
 steps in the order they will be done, not just the design narrative that justifies them.

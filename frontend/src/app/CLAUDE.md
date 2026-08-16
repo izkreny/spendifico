@@ -67,7 +67,7 @@ which swaps in on the Categories tab, needs no header change either.
 Two things about that list contradict PET-19's own acceptance criteria, and the design won
 both times: **AC3 claimed the month select appears on Transactions too** (TRN-1 and node
 `26:137` draw a search field there instead), and **the ticket never mentioned "Regenerate"**
-(INS-1 and node `38:542` both do). The Jira description was corrected rather than the code.
+(INS-1 and node `38:542` both do). The issue description was corrected rather than the code.
 
 **The month select is an inert `div`, not a control - and the search field stopped being one in
 PET-29.** A8 says the select renders the current period and does nothing until month navigation
@@ -993,7 +993,7 @@ ones above it.** The month pill, the search pill and both tabs are things that l
 are not; this one announces `aria-disabled` and says so. PET-32's edit modal does not exist, and
 the alternatives were a live item that does nothing - the failure every inert control on this
 screen exists to avoid - or dropping the item, which makes frame 10 a different design. It
-amends AC2, and PET-33's Jira ticket carries the note.
+amends AC2, and PET-33's issue carries the note.
 
 **PET-32 made it live, and both attributes are gone.** It is an ordinary `<button>` now, shaped
 exactly like the Delete beside it - `popovertargetaction="hide"` on the way out, and
@@ -2720,7 +2720,7 @@ Three things PET-33 adds that are worth carrying into the next ticket here. **Fo
 acceptance criteria could not be verified in it**: AC2 needs PET-32's edit modal, AC3's other two
 entry points need PET-32 and PET-34, AC6 needs a Dashboard and a Categories tab that render
 anything at all, and AC7 needs PET-34 - so a reviewer should read the ticket as amended rather
-than as half-done, and the Jira comment records it. **The delete is the first thing in this app
+than as half-done, and a comment on the issue records it. **The delete is the first thing in this app
 that removes data**, and `docs/TODO.md` records that the row tombstones rather than disappearing
 from the database, which is invisible through every endpoint and must not be "fixed" against the
 dialog's "permanently". And **deleting a row destroys the kebab that opened the dialog**, so
@@ -2814,7 +2814,7 @@ on every refresh.
 
 Two smaller notes. **The header overline is the period, not INS-1's "Your money assistant"** - a
 deliberate deviation decided at the 2026-08-08 review so the four routed views read consistently,
-with the Jira ticket amended. And **the tone map inverts twice**: backend `warning` renders as
+with the issue amended. And **the tone map inverts twice**: backend `warning` renders as
 daisyUI `error` and backend `neutral` as `warning`, so a name-to-name map compiles cleanly and is
 wrong in two places. `insights/insightTone.ts` holds whole class strings per key, the shape
 `frontend/CLAUDE.md` names `ui/categoryColour.ts` as the pattern for, plus a fallback so an `info`

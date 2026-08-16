@@ -69,7 +69,7 @@ stack, and re-attach afterwards.
 
 ## Repo conventions that still apply
 
-- Branch format `{type}/PET-{number}-{slug}`, one ticket per branch.
+- Branch format `{type}/GHI-{number}_{slug}`, one issue per branch.
 - HARD RULE: never commit or push directly to `main`. `gh stack merge` lands PRs;
   pushing `main` yourself is still forbidden.
 - New dependent work is cut from the parent branch's tip, then `gh stack add` (tracked)

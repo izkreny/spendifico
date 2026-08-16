@@ -116,7 +116,7 @@ directory.
 
 ## Contributing
 
-Never commit or push directly to `main`; branch as `{type}/PET-{number}-{slug}`. Commit messages
+Never commit or push directly to `main`; branch as `{type}/GHI-{number}_{slug}`. Commit messages
 are Conventional Commits, enforced by a hook. The details, including how this repo uses stacked
 branches, are in [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
 

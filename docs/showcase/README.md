@@ -116,6 +116,11 @@ from, and every line of that file is a working credential for a live account.
 generator fails and that file keeps yesterday's numbers, with its own `generatedAt` saying so.
 Every data file carries the instant it was written for exactly that reason.
 
-One exception worth knowing: **`data/tickets.json` is written by an agent, not a script.** There
-is no Jira CLI here and the MCP is not reachable from a shell, so `mise run showcase:stats` cannot
-update it. Check its `generatedAt` before quoting the ticket counts.
+One exception worth knowing: **`data/tickets.json` is frozen, not regenerated.** It counts the
+Jira project that tracked this work, which stopped being the tracker on 2026-08-13 when its 85
+tickets were migrated into this repository. Its figures are a historical record and will not
+change again, so `mise run showcase:stats` leaves it alone.
+
+Re-sourcing it from `gh issue list` would be easy and wrong: this repository's tracker holds 170
+issues, 85 of them archived pull requests, so the same chart would silently start reporting a
+different thing. Check its `generatedAt` before quoting the counts.

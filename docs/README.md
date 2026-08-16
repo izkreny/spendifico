@@ -29,7 +29,7 @@ into `guides/`, or the pull-request page quietly loses its link to it.
 | Path | Holds |
 | --- | --- |
 | [`TODO.md`](TODO.md) | The single home for deferred work: what is not built, and why that was a decision rather than a queue. Add an entry when you defer something; delete it when it lands |
-| [`plans/`](plans) | One implementation plan per file, `YYYY-MM-DD_PET-{number}_{slug}.md`. Written before the work, committed as a branch's first commit, and **not** edited afterwards: they are a record of what was decided when |
+| [`plans/`](plans) | One implementation plan per file, `YYYY-MM-DD_GHI-{number}_{slug}.md` (plans written before 2026-08-16 use the older `PET-` form and are not renamed). Written before the work, committed as a branch's first commit, and **not** edited afterwards: they are a record of what was decided when |
 | [`project-management/`](project-management) | The inputs the project is built from: the brief, the tech spec with its 101 requirement IDs and 44 assumptions, and the student handout describing the method |
 | [`reviews/`](reviews) | Code reviews kept for the record |
 | [`agents/`](agents) | Cross-cutting notes written for Claude Code: the HTTP contract, the working conventions, the Claude tooling inventory |

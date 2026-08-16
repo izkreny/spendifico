@@ -15,8 +15,19 @@ published.
 puts `git push` behind a confirmation prompt to give this rule a real barrier rather
 than just an instruction.
 
-Branch format: `{type}/PET-{number}-{slug}`, for example
-`feat/PET-160-user-profile-card`.
+Branch format: `{type}/GHI-{number}_{slug}`, for example
+`feat/GHI-160_user-profile-card`, where the number is the GitHub issue the branch serves.
+Commit messages carry the same key as a trailer: `(GHI-160)`.
+
+**`GHI-` rather than `#160`, deliberately.** GitHub resolves a bare `#NN` in a commit message
+against whatever repository displays it, and this repository's history carries 93 such
+references that mean pull requests in the repository it was migrated from - so they resolve
+here, confidently and wrongly. A prefixed key cannot collide with them in either direction.
+The one place a bare `#160` is correct is a **pull request body**, where `Closes #160` is read
+by GitHub itself and is what closes the issue on merge.
+
+Branches cut before 2026-08-16 use the older `{type}/PET-{number}-{slug}` form, naming the Jira
+ticket that the issue was migrated from. Those are left as they are; the two forms coexist.
 
 **Verify the branch in the same breath as the commit.** The branch checked out earlier in
 a session is a snapshot, not a guarantee: on 2026-08-04 a commit meant for
