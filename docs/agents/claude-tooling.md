@@ -19,7 +19,6 @@ matching phrases, not registered commands.
 | `repo-dev-setup`  | First-time local setup, both apps. Start here on a fresh clone                                                                                                           |
 | `repo-commit`     | Analyses changes, runs per-app lint/test, writes Conventional Commit messages, guards against committing to `main`                                                       |
 | `repo-secrets`    | Manages `.env` files from templates, explains where real secrets live                                                                                                    |
-| `repo-jira`       | Creates/estimates/transitions Jira issues over MCP. Needs a Jira MCP server; see `.claude/skills/repo-jira/references/jira-access.md` for the two supported setups       |
 | `repo-review-prs` | Fetches open PRs via `gh` and reviews unreviewed ones                                                                                                                    |
 | `repo-stack`      | This repo's stacked-branch wiring: the layers of truth, the worktree trap, the conventions. CLI mechanics live in the committed official `gh-stack` skill                |
 | `repo-fly`        | Driving the Fly.io deploy through `flyctl` in Bash: when it loads and the traps that bit the initial deploy. The runbook and config themselves live in `docs/guides/deployment.md` and `backend/fly.toml` |
