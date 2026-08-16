@@ -116,11 +116,15 @@ from, and every line of that file is a working credential for a live account.
 generator fails and that file keeps yesterday's numbers, with its own `generatedAt` saying so.
 Every data file carries the instant it was written for exactly that reason.
 
-One exception worth knowing: **`data/tickets.json` is frozen, not regenerated.** It counts the
-Jira project that tracked this work, which stopped being the tracker on 2026-08-13 when its 85
-tickets were migrated into this repository. Its figures are a historical record and will not
-change again, so `mise run showcase:stats` leaves it alone.
+One exception worth knowing: **`data/tickets.json` is frozen, not regenerated.** It counts the Jira
+project that tracked this work, which stopped being the tracker on 2026-08-13 when its tickets were
+migrated into this repository. Its figures are a historical record and will not change again, so
+`mise run showcase:stats` leaves it alone.
 
-Re-sourcing it from `gh issue list` would be easy and wrong: this repository's tracker holds 170
-issues, 85 of them archived pull requests, so the same chart would silently start reporting a
-different thing. Check its `generatedAt` before quoting the counts.
+Its `total` reads **84** while the migration moved **85** tickets. Both are right: the snapshot was
+taken on 2026-08-12 and PET-85 was raised after it. The file is a photograph of a particular
+afternoon, which is the whole reason it carries a `generatedAt` - check that before quoting it.
+
+Re-sourcing it from `gh issue list` would be easy and wrong: 85 of this repository's issues are
+archived pull requests rather than tickets, so the same chart would silently start reporting a
+different thing.

@@ -20,11 +20,12 @@ Branch format: `{type}/GHI-{number}_{slug}`, for example
 Commit messages carry the same key as a trailer: `(GHI-160)`.
 
 **`GHI-` rather than `#160`, deliberately.** GitHub resolves a bare `#NN` in a commit message
-against whatever repository displays it, and this repository's history carries 93 such
+against whatever repository displays it, and this repository's history carries many such
 references that mean pull requests in the repository it was migrated from - so they resolve
-here, confidently and wrongly. A prefixed key cannot collide with them in either direction.
-The one place a bare `#160` is correct is a **pull request body**, where `Closes #160` is read
-by GitHub itself and is what closes the issue on merge.
+here, confidently and wrongly. `docs/migration/README.md` has the count and the detail.
+A prefixed key cannot collide with them in either direction. The one place a bare `#160` is
+correct is a **pull request body**, where `Closes #160` is read by GitHub itself and is what
+closes the issue on merge.
 
 Branches cut before 2026-08-16 use the older `{type}/PET-{number}-{slug}` form, naming the Jira
 ticket that the issue was migrated from. Those are left as they are; the two forms coexist.

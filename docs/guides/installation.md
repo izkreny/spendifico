@@ -223,7 +223,7 @@ gh auth refresh -s read:project
 ## Optional: the drizzle-kit MCP server
 
 `drizzle-kit` ships an MCP server exposing `generate`, `push`, `pull`, `check`, `export` and
-`up` as tools. It is already in the MCP template, so copy that and keep the `drizzle` entry:
+`up` as tools. It is the only entry in the MCP template, so copy that:
 
 ```bash
 cp .mcp.json.example .mcp.json

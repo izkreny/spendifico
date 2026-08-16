@@ -32,7 +32,7 @@ If it runs but exits non-zero, stop and tell the user: "`gh` is installed but no
 
 Do not attempt the review without `gh`; every later step depends on it.
 
-Issue context comes from the same `gh` you just checked, so there is no second thing to be authenticated and no degraded mode to fall into. This is the practical gain from retiring the Jira MCP: a headless run under `claude --print` or cron now gets the same issue context an interactive one does, where the Jira connector was authorized interactively and so was never available there.
+Issue context comes from the same `gh` you just checked, so there is no second thing to authenticate and nothing to degrade to when an MCP server is absent. This is the practical gain from retiring the Jira MCP: a headless run under `claude --print` or cron now gets the same issue context an interactive one does, where the Jira connector was authorized interactively and so was never available there. A branch that carries no issue key at all still yields no context - see Step 2 - but that is a property of the branch, not of the environment.
 
 ## Step 1 - Determine scope
 
@@ -62,7 +62,7 @@ For each PR number, run the interactive review loop:
 
 1. **Load project context** - read root `CLAUDE.md`, the scoped `CLAUDE.md` under `backend/` or `frontend/` for every app the diff touches, and any `docs/agents/` guide the root pointer table names for the change at hand.
 2. **Fetch the PR** - `gh pr view <n>` and `gh pr diff <n>`. If the diff is empty, skip the PR and note it in the summary as "skipped - empty diff".
-3. **Enrich with the issue** - take the number from the branch name (`{type}/GHI-{number}_{slug}`, so split on the first `_` and strip `GHI-`) and read it with `gh issue view <n> --json title,body,labels,parent,blockedBy` for acceptance-criteria context. A branch predating the convention carries `PET-<n>` instead, whose number is **not** the issue number - resolve those by title search (`gh issue list --state all --search "PET-<n>"`) rather than by assuming. Skip silently if neither yields an issue.
+3. **Enrich with the issue** - take the number from the branch name `{type}/GHI-{number}_{slug}`: drop everything up to and including the first `/`, take everything before the first `_`, then strip the `GHI-` prefix. On `feat/GHI-171_retire-jira-tooling` that yields `171`. Read it with `gh issue view <n> --json title,body,labels,parent,blockedBy` for acceptance-criteria context. A branch predating the convention carries `PET-<n>` instead, whose number is **not** the issue number - resolve those by title search (`gh issue list --state all --search "PET-<n>"`) rather than by assuming. Skip silently if neither yields an issue.
 4. **Analyse** against the evaluation criteria below.
 5. **De-duplicate** - read existing PR comments first; do not repeat a point already raised.
 6. **Post inline comments** via `gh api`. Use `REQUEST_CHANGES` for blockers, `COMMENT` for suggestions.

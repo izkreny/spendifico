@@ -196,7 +196,7 @@ Follow this format strictly:
 - **Single line only.** No body, no blank lines, no multi-line messages.
 - **Subject line:** max 50 characters, lowercase, no trailing period, imperative mood ("add", "fix", "update")
 - **Scope:** `backend` or `frontend`, inferred from file paths (see Step 7). Omit entirely - no empty `()` - if the change spans both apps or has no clear scope.
-- **Issue key:** infer from the current branch name `{type}/GHI-{number}_{slug}` - split on the first `_`, keep the `GHI-<number>` - and append as `(GHI-<number>)`. A branch predating 2026-08-16 carries `PET-<number>` instead; keep that form on those branches rather than converting it, because the numbers are not the same. If no key can be determined from the branch, omit it - do not guess, and never substitute `#<number>`.
+- **Issue key:** infer from the current branch name `{type}/GHI-{number}_{slug}` - drop everything up to and including the first `/`, then take everything before the first `_`, which leaves `GHI-<number>` - and append as `(GHI-<number>)`. A branch predating 2026-08-16 carries `PET-<number>` instead; keep that form on those branches rather than converting it, because the numbers are not the same. If no key can be determined from the branch, omit it - do not guess, and never substitute `#<number>`.
 - **Never** include `Co-Authored-By` or any AI attribution lines.
 - **Never** reference internal tooling, Claude, or auto-generation in the message.
 

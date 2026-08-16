@@ -26,6 +26,13 @@ matching phrases, not registered commands.
 | `frontend-nextjs` | Passive reference library of Next.js/React rules, vendored from upstream. Consulted when writing frontend code                                                            |
 | `backend-drizzle` | How Drizzle and Turso are wired in **this** repo: the two migration scopes, the database-per-user consequences, the Turso drivers. Deliberately not a drizzle-kit manual |
 
+**Issue-tracker conventions live in `.claude/gh-issues.md`**, not in a skill. It records this
+repository's label set, what each axis asks, the default that is expressed by carrying no label,
+the milestones, and the mapping from a title's `[LAYER]` prefix to its label. There is no
+`repo-jira` skill any more: Jira stopped being the tracker on 2026-08-13 and its tooling was
+retired on 2026-08-16, so issue work is `gh` in Bash. The consumer of that file is a personal
+skill outside this repository, which is why nothing under `.claude/skills/` names it.
+
 **Agents** (delegated subtasks with their own context): `code-reviewer`, `debugger`,
 `test-automator`, `nestjs-specialist` and `nextjs-specialist` (these two fetch and
 synthesise the live official docs, which is different from the passive rule libraries

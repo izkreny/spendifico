@@ -44,10 +44,11 @@ set" instead.
 | Routes, layouts, the session gate, the screens | `frontend/src/app/CLAUDE.md` | pointer |
 | The HTTP contract and its generated artifacts | `docs/agents/api-contract.md` | pointer |
 | Skills, subagents, MCP | `docs/agents/claude-tooling.md`; permissions stay in `.claude/SETTINGS.md` | pointer |
+| The issue tracker's labels, their axes and defaults, milestones, and the title prefix mapping | `.claude/gh-issues.md` | pointer |
 | Why something is deferred | `docs/TODO.md` | pointer; each area guide's `## Not built here` carries only the warning |
 
-Note two rows where the single home is a skill rather than a doc. Single-sourcing does not mean
-docs win; it means one file wins.
+Note the rows whose single home is a skill or an agent config rather than a doc. Single-sourcing
+does not mean docs win; it means one file wins.
 
 **`npm run docs:check` (`scripts/docs-check.sh`) is what keeps the rows above honest**, and it
 runs in the `conventions` CI job. It asserts the Node major and floor against their real homes,
@@ -193,17 +194,20 @@ treatment, since database-per-user exists for it.
 
 **Implementation plans live in `docs/plans/`**, one Markdown file per plan, named
 `YYYY-MM-DD_GHI-{number}_{slug}.md` (date the plan was written, the GitHub issue it
-serves, then a short slug), for example `2026-08-16_GHI-171_retire-jira-tooling.md`.
-**Plan into that file, never only into the conversation.** Anything worth calling a plan
-is written there before implementation starts, so it is reviewed as a diff and the
-reasoning outlives the session that produced it.
+serves, then a short slug), for example `2026-08-16_GHI-171_retire-jira-tooling.md`. **Plan into
+that file, never only into the conversation.** Anything worth calling a plan is written
+there before implementation starts, so it is reviewed as a diff and the reasoning
+outlives the session that produced it.
 
 **Plans written before 2026-08-16 use `PET-{number}` and are not renamed.** That was the
 Jira key, and every one of those tickets was migrated into this repository's issue
 tracker with its key kept in the title, so `PET-13` still finds the issue it names.
-Renaming them to issue numbers would detach fifty plans from the work they describe and
-gain nothing. Two conventions coexist, and the cutover date is the only thing you need to
-tell them apart.
+Renaming them would detach 64 plan files, covering 62 distinct keys, from the work they
+describe and gain nothing. Two conventions coexist, and the cutover date tells them apart.
+
+**Two dates are in play and they are not the same event.** The tickets moved to GitHub on
+2026-08-13; the branch, plan and commit convention changed on 2026-08-16. Commits made in
+the gap carry no key at all, which is expected rather than a lapse.
 
 **Every plan enumerates the tasks it will carry out**, as an explicit checklist of the
 steps in the order they will be done, not just the design narrative that justifies them.

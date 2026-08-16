@@ -82,9 +82,13 @@ not offer a closed issue in its sub-issue picker, but that is a search filter, n
 
 ### `#NN` in commit messages now resolves, and resolves wrongly
 
-**93 of the 588 commit messages contain a `#NN` reference**, including the head commit, `Merge pull
+**87 of the 588 commit messages contain a `#NN` reference**, including the head commit, `Merge pull
 request #93 from AntePrkacin/chore/PET-80-showcase-preps`. Those numbers were pull request numbers
 **in the source repository**.
+
+An earlier draft of this page said 93, which is what a naive `#[0-9]+` reports. That pattern also
+counts hex colours (`#4f46e5`, `#22C55E`, `#001e29` and six others appear in these messages), and it
+counts matching *lines* rather than commits. Corrected 2026-08-16; the conclusion below is unchanged.
 
 Before this migration they were dead text, because this repository had no issues. They now all
 resolve against *this* tracker, where `#1`-`#85` are Jira tickets and `#86`-`#170` are archived pull
