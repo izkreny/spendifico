@@ -188,6 +188,72 @@ excludes that directory for exactly this reason.
 - [ ] Open the follow-up issue for the `CLAUDE.md` refactor, carrying the two decisions recorded above
 - [ ] Verify: `npm run docs:check`, the dangling-reference sweep, and the repo-settings read-back
 
+## Memory verdicts
+
+Thirty-two memories existed when this ticket started. Two were acted on because the instruction
+list names them; the rest are recorded here with a recommendation and left for the owner, since
+deleting somebody's memory is not a mechanical call.
+
+**Done.** `ai-disclaimer-when-posting-as-user` deleted - `AGENTS.md` is canonical and both skills
+state where the disclaimer applies. `github-stacked-branches-no-rebase` repointed at
+`github-pr-flow`'s `workflows/stack.md`; two further stale pointers inside it were fixed at the
+same time, one naming a pre-migration branch and pull request.
+
+**Recommend deleting, both stale.** `backend-endpoint-queue` - the queue is exhausted and its
+ordering was Jira's. `showcase-run-handover` - its `PR #93` does not resolve in this repository at
+all, because the number is from before the migration; anything live in it belongs in `docs/TODO.md`.
+
+**Recommend migrating into this repository**, because they are facts about it rather than about how
+to work: `central-template-seed-not-applied-by-deploy` (its own index line already says a TODO entry
+was queued for it), `no-data-migrations-no-real-users`, `local-dev-runs-in-local-mode`,
+`parallel-sessions-jest-oom`, and `backend-secrets-live-in-env-local`.
+
+**Recommend migrating to `/home/izkreny/.agents/AGENTS.md`**, because nothing in them is about this
+repository: `use-ripgrep-not-grep`, `one-decision-at-a-time`, `show-progress-during-long-tasks`,
+`autonomous-execution-no-questions`, `stop-after-plan-pr`, `satisfy-the-rule-before-amending-it`,
+`trust-user-assertions-about-their-own-work`, `drafts-go-to-a-stable-directory`,
+`read-comments-on-cleanup-tasks`, `slow-mcp-reads-go-to-a-subagent`,
+`a-missing-key-never-means-unset`, `while-read-drops-the-last-line`, `worktree-shell-cwd-trap`,
+`opensuse-tumbleweed-zypper-and-mise` and `use-chromium-for-browser-automation`.
+
+Two of those carry a note. `use-chromium-for-browser-automation` duplicates
+`docs/agents/claude-tooling.md`, which is the richer copy - five gotchas against three - so the
+memory should become a pointer rather than a second source. And `drafts-go-to-a-stable-directory`
+names `/home/izkreny/.claude/drafts/` while `AGENTS.md` names `/home/izkreny/.agents/drafts/`; those
+are the same directory through a symlink, but only one of them should be written down.
+
+**Keep as they are**, repo-specific and still true: `git-hooks-do-not-run-in-worktrees`,
+`turso-cli-cannot-address-user-databases`, `no-personal-data-in-repo`, `blueprint-mcp-trust-levels`,
+`fly-mcp-declined-flyctl-skill`, `claude-md-rule-exclusions`, `force-push-deny-rule` and
+`spendifico-migration-staged`. The last two need a touch rather than a verdict:
+`force-push-deny-rule` should gain the two `git push origin main` entries this ticket adds, and
+`claude-md-rule-exclusions` should be re-read once the convention rewrite lands.
+
+## What the CLAUDE.md skim found
+
+Stage 6 skims the seven `CLAUDE.md` files and `docs/agents/` for material that is not about this
+repository and should live at user scope before the deferred ticket rewrites them. It found one
+candidate, and one non-candidate worth writing down so it is not proposed again.
+
+**The browser-verification method belongs at user scope.** `docs/agents/claude-tooling.md` carries
+the fullest statement anywhere of how to verify a UI change: headless Chromium over the DevTools
+protocol rather than the extension, why computed style and the accessibility tree are the evidence
+rather than a screenshot, why the pre-fix markup must be probed in the same run so a check is seen
+to fail, and five gotchas. `/home/izkreny/.agents/AGENTS.md` says nothing about browsers at all, and
+the personal memory that does duplicates this file with three of the five gotchas. Only part of it
+is repo-specific - the daisyUI cascade traps, the Expensa theme pair, the CEDI glyph, Storybook's
+story ids - and the method around those is not. The split is the work; the memory then becomes a
+pointer rather than a third copy.
+
+**Root `CLAUDE.md`'s working rules are deliberately repo-level and stay.** Show-the-diff before
+committing, explain a state-changing command first, the visible todo list, the absence-sweep
+dotfiles trap, "acceptance criteria are amendable" - all of these read as generic, and moving them
+to user scope would reverse a decision already on record. They were written into the repository on
+2026-08-04 precisely so they bind anyone working here rather than only this user, and the
+`claude-md-rule-exclusions` memory exists to record which rules were held back from that commit as
+personal preference. A skim that only asks "is this sentence generic" would move them; the question
+is who they are meant to bind.
+
 ## Verification
 
 `npm run docs:check` is the gate, and this ticket changes what it covers: narrowing the `.agents/`

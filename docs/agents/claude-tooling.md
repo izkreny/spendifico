@@ -17,27 +17,34 @@ matching phrases, not registered commands.
 | Skill             | What it does                                                                                                                                                             |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `repo-dev-setup`  | First-time local setup, both apps. Start here on a fresh clone                                                                                                           |
-| `repo-commit`     | Analyses changes, runs per-app lint/test, writes Conventional Commit messages, guards against committing to `main`                                                       |
 | `repo-secrets`    | Manages `.env` files from templates, explains where real secrets live                                                                                                    |
-| `repo-review-prs` | Fetches open PRs via `gh` and reviews unreviewed ones                                                                                                                    |
-| `repo-stack`      | This repo's stacked-branch wiring: the layers of truth, the worktree trap, the conventions. CLI mechanics live in the committed official `gh-stack` skill                |
 | `repo-fly`        | Driving the Fly.io deploy through `flyctl` in Bash: when it loads and the traps that bit the initial deploy. The runbook and config themselves live in `docs/guides/deployment.md` and `backend/fly.toml` |
 | `backend-nestjs`  | Passive reference library of NestJS rules, vendored from upstream. Consulted when writing backend code                                                                    |
 | `frontend-nextjs` | Passive reference library of Next.js/React rules, vendored from upstream. Consulted when writing frontend code                                                            |
 | `backend-drizzle` | How Drizzle and Turso are wired in **this** repo: the two migration scopes, the database-per-user consequences, the Turso drivers. Deliberately not a drizzle-kit manual |
 
-**Issue-tracker conventions live in `.claude/gh-issues.md`**, not in a skill. It records this
-repository's label set, what each axis asks, the default that is expressed by carrying no label,
-the milestones, and the mapping from a title's `[LAYER]` prefix to its label. There is no
-`repo-jira` skill any more: Jira stopped being the tracker on 2026-08-13 and its tooling was
-retired on 2026-08-16, so issue work is `gh` in Bash. The consumer of that file is a personal
-skill outside this repository, which is why nothing under `.claude/skills/` names it.
+**Tracker and pull-request conventions live in `.agents/github.md`**, not in a skill. It records
+this repository's label set, what each axis asks, the default that is expressed by carrying no
+label, the milestones, the issue title form, and the branch, commit, PR and merge forms. There is
+no `repo-jira` skill any more: Jira stopped being the tracker on 2026-08-13 and its tooling was
+retired on 2026-08-16, so issue work is `gh` in Bash.
 
-**Agents** (delegated subtasks with their own context): `code-reviewer`, `debugger`,
-`test-automator`, `nestjs-specialist` and `nextjs-specialist` (these two fetch and
-synthesise the live official docs, which is different from the passive rule libraries
-above), and `linus-reviewer` (a deliberately blunt review persona; it has no tools, so
-paste the diff into the prompt).
+**The file is named for its readers, and the name is load-bearing.** Two personal skills outside
+this repository read it - `github-solo-dev-repo` for the tracker and `github-pr-flow` for branches,
+pull requests and merges - and both look for `.agents/github.md` first, falling back to the same
+filename under `.claude/`. Its previous name, `gh-issues.md`, was read by neither, so the per-repo
+conventions it records were silently ignored. Each skill treats it as winning on every
+conflict with its own defaults. Nothing under `.claude/skills/` names it, because nothing in this
+repository consumes it.
+
+**Agents** (delegated subtasks with their own context): `debugger`, `test-automator`,
+`nestjs-specialist` and `nextjs-specialist` - these last two fetch and synthesise the live
+official docs, which is different from the passive rule libraries above.
+
+Two are gone from here. `code-reviewer` is superseded by the review rules in the user's own
+`AGENTS.md`, and `linus-reviewer` moved to user scope rather than being retired: it is a blunt
+review persona with no tools and nothing about it was specific to this repository, so it now
+loads in every repository instead of one.
 
 **Permissions.** `.claude/settings.json` is committed and applies to everyone. Notably,
 `Edit` and `Write` are **not** pre-approved, so Claude asks before every file change and
@@ -45,14 +52,11 @@ you see the diff before it lands. Every decision in that file is explained in
 `.claude/SETTINGS.md`, because JSON cannot hold comments. Personal preferences belong in
 `.claude/settings.local.json`, which is gitignored.
 
-**The `gh stack` CLI ships an official agent skill, and it is committed.**
-`.claude/skills/gh-stack/` comes from
-`gh skill install github/gh-stack gh-stack --agent claude-code --scope project`
-(`gh skill` is a preview feature of the GitHub CLI; the command needs both the repo and
-the skill name, or it only lists what is available). It is committed so everyone has a
-byte-identical copy and a fresh clone works with no extra step; refreshing it is a
-deliberate act - re-run the install and commit the diff. The repo's own `repo-stack`
-skill covers only this repo's stacked-branch wiring and defers the CLI to it.
+**The `gh stack` CLI ships an official agent skill, and this repo no longer vendors it.** It was
+committed here once, so that a fresh clone carried a byte-identical copy; it is now installed at
+user scope instead, pinned to the same tag and the same tree SHA, which made the committed copy
+redundant rather than merely duplicated. Stacked-branch work is covered by the user's
+`github-pr-flow` skill, which owns both the CLI mechanics and this repo's wiring.
 
 **Drizzle ships its own skills, and they are committed.** `drizzle-kit` bundles agent skills
 of its own (`drizzle`, `drizzle-generate`, `drizzle-migrations`, `drizzle-push`,
@@ -171,6 +175,4 @@ Five gotchas, all of them met in practice:
 authenticated session on a third-party site, something the user wants to watch or take over
 mid-flow, or their saved logins. Verifying this app's own CSS and semantics is none of those.
 
-`.claude/commit-checks.md` is a generated cache read by `repo-commit`. Regenerate it
-with `/repo-commit refresh-checks` when it goes stale.
 

@@ -46,8 +46,8 @@ command with `-X POST` writes to GitHub. Nothing in a permission pattern can tel
 apart, so it is treated as a write.
 
 Setup instructions for `gh` itself, including which OAuth scopes matter, are in the
-`docs/guides/installation.md` section on the GitHub CLI. The `repo-review-prs` skill assumes it is already
-authenticated.
+`docs/guides/installation.md` section on the GitHub CLI. The `github-pr-flow` skill assumes it is
+already authenticated.
 
 ### `permissions.deny`
 
@@ -55,6 +55,13 @@ Never, not even with a prompt:
 
 - `rm -rf /`, `rm -rf ~`, `rm -rf .git*` - unrecoverable
 - `git push --force*`, `git push -f*` - rewrites history other people have pulled
+- `git push origin main`, `git push origin HEAD:main` - the hard rule, given a local barrier
+
+**The two `main` entries are a speed optimisation, not the gate.** `main` is a protected
+branch with `enforce_admins` on, so GitHub refuses a direct push from anyone including the
+owner. These patterns only move that refusal from a round trip to the API to an instant local
+one, and they are deliberately narrow: a pattern broad enough to catch every spelling of a push
+to `main` would also catch pushes to a branch whose name merely contains it.
 
 ### Why there is no `Read(**/.env)` deny rule
 

@@ -36,15 +36,15 @@ set" instead.
 | Every command in either app | `docs/guides/commands.md` | pointer, or a marked copy inside a procedure |
 | Backend environment variables, defaults, pairings | `docs/guides/configuration.md`; enforced by `backend/src/config/env.validation.ts`; reasoning in `backend/CLAUDE.md` | pointer; procedures may name a variable without restating its default |
 | Ports 3000, 4200 and 6006 | the code and config that bind them: `PORT`'s default in the Joi schema, and `-p` in the frontend's `dev`, `start` and `storybook` scripts | name a port freely. These are fixed by design, and the asymmetry is the part worth repeating |
-| Branch format, commit types, the hooks, the CI job list | `docs/CONTRIBUTING.md`; types enforced by `commitlint.config.js` | pointer |
-| Stacked-branch mechanics | `.claude/skills/repo-stack/SKILL.md` and the committed `gh-stack` skill | pointer, including from `docs/CONTRIBUTING.md` |
+| Branch format, commit and PR title forms, the merge policy, the hooks, the CI job list | `docs/CONTRIBUTING.md`; types enforced by `commitlint.config.js` | pointer |
+| Stacked-branch mechanics | the user's `github-pr-flow` skill | pointer, including from `docs/CONTRIBUTING.md` |
 | Migration scopes, schema conventions, drivers | `backend/src/database/CLAUDE.md` | pointer |
 | Design tokens, the Figma boundary, the daisyUI cascade traps | `frontend/CLAUDE.md` | pointer |
 | Component conventions, and what earns a file in `components/` | `frontend/src/components/CLAUDE.md` | pointer |
 | Routes, layouts, the session gate, the screens | `frontend/src/app/CLAUDE.md` | pointer |
 | The HTTP contract and its generated artifacts | `docs/agents/api-contract.md` | pointer |
 | Skills, subagents, MCP | `docs/agents/claude-tooling.md`; permissions stay in `.claude/SETTINGS.md` | pointer |
-| The issue tracker's labels, their axes and defaults, milestones, and the title prefix mapping | `.claude/gh-issues.md` | pointer |
+| The tracker's labels, their axes and defaults, milestones, and the issue title form | `.agents/github.md` | pointer |
 | Why something is deferred | `docs/TODO.md` | pointer; each area guide's `## Not built here` carries only the warning |
 
 Note the rows whose single home is a skill or an agent config rather than a doc. Single-sourcing
@@ -205,9 +205,13 @@ tracker with its key kept in the title, so `PET-13` still finds the issue it nam
 Renaming them would detach 64 plan files, covering 62 distinct keys, from the work they
 describe and gain nothing. Two conventions coexist, and the cutover date tells them apart.
 
-**Two dates are in play and they are not the same event.** The tickets moved to GitHub on
-2026-08-13; the branch, plan and commit convention changed on 2026-08-16. Commits made in
-the gap carry no key at all, which is expected rather than a lapse.
+**Three dates are in play and they are not the same event.** The tickets moved to GitHub on
+2026-08-13; the branch, plan and commit convention changed on 2026-08-16; and on 2026-08-20
+the commit trailer changed again, from `(GHI-160)` to `(#160)`, when this repository adopted
+the conventions of the user-scope GitHub skills. Commits made in the first gap carry no key
+at all, which is expected rather than a lapse, and commits between the second and third dates
+carry `(GHI-160)`. The branch and plan-file forms did **not** change on the third date, and
+`docs/CONTRIBUTING.md` argues why `GHI-` survives in exactly those two places.
 
 **Every plan enumerates the tasks it will carry out**, as an explicit checklist of the
 steps in the order they will be done, not just the design narrative that justifies them.

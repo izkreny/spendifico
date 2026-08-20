@@ -325,7 +325,7 @@ read the file before you write the change, not after.
 | build one of the remaining access screens                            | `frontend/src/app/CLAUDE.md`, The access screens |
 | change a DTO, a response shape, or how a page fetches               | `docs/agents/api-contract.md`   |
 | branch, commit, push, or touch a stacked branch                     | `docs/CONTRIBUTING.md`          |
-| open, label, close or search an issue, or name a milestone          | `.claude/gh-issues.md`          |
+| open, label, close or search an issue, or name a milestone          | `.agents/github.md`             |
 | write a plan, or carry out any multi-step task                      | `docs/agents/conventions.md`    |
 | use or change a skill, a subagent, or the MCP server                | `docs/agents/claude-tooling.md` |
 | change a permission                                                 | `.claude/SETTINGS.md`           |

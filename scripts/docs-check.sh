@@ -33,7 +33,7 @@ note() { echo "FAIL: $1" >>"$faults"; }
 # excluded from the doc sweeps, never from the code-derived assertions.
 docs() {
   git ls-files '*.md' |
-    grep -Ev '^(docs/plans/|docs/reviews/|\.agents/|\.claude/skills/(gh-stack|drizzle|backend-nestjs|frontend-nextjs))'
+    grep -Ev '^(docs/plans/|docs/reviews/|\.agents/skills/|\.claude/skills/(gh-stack|drizzle|backend-nestjs|frontend-nextjs))'
 }
 
 # ------------------------------------------------------------ 1. Node major
