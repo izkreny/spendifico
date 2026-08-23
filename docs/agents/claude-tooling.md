@@ -114,65 +114,32 @@ incorporation of main established, verified finding by finding:
   manual-check protocol demands that walk; treat the walk, not the findings list, as the
   stage's real value.
 
-**That walk runs in headless Chromium over the DevTools protocol, not through the
-claude-in-chrome extension.** Strongly prefer headless unless the request explicitly names the
-extension or the browser. `/usr/bin/chromium --headless=new --remote-debugging-port=N
---user-data-dir=<throwaway>`, then attach a flat session with `Target.attachToTarget` and drive
-it with `Runtime.evaluate`. Node's global `WebSocket` is enough, so this needs no Puppeteer, no
-Playwright and no dependency of any kind. Do not ask which browser to use.
+**That walk runs in headless Chromium over the DevTools protocol, and the method is not this
+repo's to state.** It lives at user scope, in the `browser-verification` skill: launching and
+attaching, why computed style and the accessibility tree are the evidence rather than a screenshot,
+why the pre-fix markup gets probed in the same run, and five gotchas met in practice. Do not ask
+which browser to use.
 
-The reason is not convenience. Every defect this class of check exists to find is **a class that
-is present in the markup and paints nothing** - `frontend/CLAUDE.md`'s Where daisyUI and Tailwind
-fight is the catalogue - and three things follow from that:
+What belongs here is the part that is only true of this app, and it is worth reading before writing
+a walk against it.
 
-- **Computed style and the accessibility tree are the evidence**, not a screenshot. Whether an
-  outline paints is `getComputedStyle(el).outlineStyle`; whether a control contradicts itself is
-  `Accessibility.getPartialAXTree`. Both are exact, and neither is a judgement call about a
-  picture.
-- **The pre-fix markup can be probed in the same run**, which is the part no manual walk gives
-  you. Clone the element, put the old classes back, read what the browser computes, and assert
-  the old value *fails* the check. PET-57's review fixes were verified with twelve such checks,
-  two of them proving the harness discriminates - the old dot still computes an opaque shadow
-  colour and the old drawer markup still reports `Open sidebar Close sidebar`. A check that has
-  never been seen to fail is not evidence.
-- **The script is the artifact.** It is reviewable, it reruns, and it does not depend on which
-  tab anybody has open.
-
-Five gotchas, all of them met in practice:
-
-- **Chromium reports colour as `oklab(L a b / A)`**, not `rgba()`. Matching `rgba(` produces a
-  false failure; match the alpha component generically instead.
-- **A colour check that only asks "did it paint" has not checked the colour.** This is the one
-  that has now cost three review findings across two tickets, so it is worth stating as a rule
-  rather than as a story. PET-64's walk verified that all twelve category chips painted a real
-  colour, that none was transparent, and that the twelve were mutually distinct - twenty-eight
-  green checks - and every one of those passed for a tile measuring 1.1:1 against the card it
-  sits on, because none of them ever looked at the card. **Measure the subject against the
-  surface behind it**, in both themes, and composite first: paint the fill over the background
-  on a 1x1 canvas and read the pixel back, since `getComputedStyle` reports a translucent colour
-  uncomposited and a WCAG ratio computed from that is a ratio for a colour nobody sees. Two
-  numbers make a good pair of controls, both already on record from independent runs: `base-300`
-  measures ~1.16:1 against `base-100` and must fail, and `base-content/50` measures ~3.4:1 light
-  and ~4.8:1 dark and must pass. A third worth knowing about: **a class Tailwind never compiled
-  reports a ratio of exactly 1.0**, indistinguishable from a colour identical to the background,
-  so a control that passes tells you the harness works *and* that the class exists.
-- **Headless starts in the light theme.** This app ships the Expensa pair selected by
-  `prefers-color-scheme` (PET-74), so anything theme-specific needs
-  `Emulation.setEmulatedMedia` - and a check that silently only ever ran in light is half a
-  check. The Settings Theme control can pin a theme instead, via a `data-theme` attribute the
-  root layout stamps from the `spendifico.theme` cookie; a walk of that path sets the attribute
-  or the cookie rather than emulating media.
-- **`next/font` fetches from Google at build time**, so with no network the fallback family
-  renders. Any check whose subject is a glyph is untrustworthy offline; the ₵ CEDI SIGN in
-  `ui/Sidebar.tsx`'s wordmark is the one this repo already flags for a human eye.
-- **Storybook is the cheap surface and it does not cover everything.** `npm run storybook` plus
+- **The defects a walk finds here are catalogued.** `frontend/CLAUDE.md`'s Where daisyUI and
+  Tailwind fight is the list of classes that are present in the markup and paint nothing, which is
+  the whole class of defect this check exists for.
+- **Two contrast controls, both on record from independent runs.** `base-300` measures ~1.16:1
+  against `base-100` and must **fail**; `base-content/50` measures ~3.4:1 light and ~4.8:1 dark and
+  must **pass**. A harness without a pair like this proves nothing about itself. A third case:
+  a class Tailwind never compiled reports exactly 1.0, so a passing control tells you the harness
+  works *and* that the class exists.
+- **This app ships the Expensa theme pair selected by `prefers-color-scheme` (PET-74)**, so a
+  theme-specific check needs `Emulation.setEmulatedMedia`. The Settings Theme control pins one
+  instead, through a `data-theme` attribute the root layout stamps from the `spendifico.theme`
+  cookie; a walk of that path sets the attribute or the cookie rather than emulating media.
+- **The ₵ CEDI SIGN in `ui/Sidebar.tsx`'s wordmark is the glyph this repo flags for a human eye**,
+  because `next/font` fetches from Google at build time and the fallback family renders offline.
+- **Storybook is the cheap surface and does not cover everything.** `npm run storybook` plus
   `iframe.html?viewMode=story&id=<id>` reaches every component and screen with no backend and no
-  session, and `index.json` lists the story ids. The four `(app)` screens are behind the session
+  session, and `index.json` lists the story ids. The four `(app)` screens sit behind the session
   gate, so reaching them headlessly means driving register, the emailed link and `/auth/verify`
-  first - possible, and much more setup than a component check needs.
-
-**Reach for the extension only when the task genuinely needs a human's browser**: an
-authenticated session on a third-party site, something the user wants to watch or take over
-mid-flow, or their saved logins. Verifying this app's own CSS and semantics is none of those.
-
+  first - possible, and far more setup than a component check needs.
 
