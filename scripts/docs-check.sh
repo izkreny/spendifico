@@ -141,7 +141,7 @@ absent_by_design() {
   esac
 }
 for f in $(docs); do
-  grep -oE '`(backend|frontend|docs|scripts|\.claude|\.github|\.husky)/[A-Za-z0-9_./()-]+`' "$f" |
+  grep -oE '`(backend|frontend|docs|scripts|\.agents|\.claude|\.github|\.husky)/[A-Za-z0-9_./()-]+`' "$f" |
     tr -d '`' | sort -u | while read -r p; do
       case "$p" in *'*'* | */) continue ;; esac
       [ -e "$p" ] && continue
