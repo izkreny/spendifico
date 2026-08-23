@@ -204,7 +204,7 @@ Thirty-two memories existed when this ticket started. Two were acted on because 
 | `claude-md-rule-exclusions` | Two working rules deliberately left out of the repo's `CLAUDE.md` | Keep, then re-read | Records a decision nothing else does. Re-read once this ticket's convention rewrite has landed, in case it named one of them |
 | `drafts-go-to-a-stable-directory` | Hand-edited drafts go to a stable directory, then `Ctrl+G`, `:CCDraft` | Delete, once the conflict is settled | `AGENTS.md` already has a `## Drafts` section. The memory names a different path for the same directory, so settle which is canonical **before** deleting, not after |
 | `fly-mcp-declined-flyctl-skill` | The Fly MCP was evaluated and declined; drive Fly through `flyctl` | Keep | A decision about this project's deploy, and `.claude/skills/repo-fly` still exists |
-| `force-push-deny-rule` | Force pushes are deny-listed, and `git -C` slips past the pattern | Keep, but **fix the contradiction** | It says to hand a force push over `via ! git push ...`, and `AGENTS.md` says never to prefix a command with `!` because it breaks the paste. One of them is wrong and it is not `AGENTS.md` |
+| `force-push-deny-rule` | Force pushes and the bare `git push` are deny-listed, and `git -C` slips past the pattern | **Fixed**, keep | The `!`-prefix instruction is gone - `AGENTS.md` forbids it because it breaks the owner's paste. Also corrected two stale facts: `git push *` is in `ask` not `allow`, and the deny list grew by three entries on this branch. Now records the bare-push deny's false positive too |
 | `git-hooks-do-not-run-in-worktrees` | Husky hooks fire only where `.husky/_` exists, so check rather than assume | Keep | Repo-specific, and the check it prescribes is still the right one |
 | `github-stacked-branches-no-rebase` | Stacked branches are the norm; read every stacking instruction before acting | **Repointed** - trim next | Done for this ticket, but it is still long and now duplicates `github-pr-flow`'s `workflows/stack.md`. Worth reducing to a pointer the way the browser one was |
 | `local-dev-runs-in-local-mode` | Local testing runs the backend in local mode, never against Turso Cloud | Migrate into the repo | A fact about `backend/.env` and this repo's boot guard, not about how to work |
@@ -244,12 +244,16 @@ Three rows moved from "migrate" to "delete" on that reading, because a skill alr
 `autonomous-execution-no-questions` asked for a mixed-model setup that `github-implement` now
 enforces structurally by spawning a pinned implementer, so only its first clause is left to record.
 
-**One row is a contradiction rather than a duplication, and it is the reason to re-read rather than
-re-file.** `force-push-deny-rule` says to hand a force push to the owner as `! git push
---force-with-lease ...`; `AGENTS.md` says never to prefix a command with `!`, because the owner
-pastes commands straight out and the `!` breaks the paste. Both were written deliberately, both are
-live, and they cannot both be followed. Fixing that is a smaller job than any migration in this
-table and a more urgent one.
+**One row was a contradiction rather than a duplication, and it is the reason to re-read rather
+than re-file.** `force-push-deny-rule` told an agent to hand a force push to the owner as `! git
+push --force-with-lease ...`; `AGENTS.md` forbids prefixing a command with `!`, because the owner
+pastes commands straight out and the `!` breaks the paste. Both were written deliberately, both
+were live, and they could not both be followed. **Fixed on 2026-08-23**, along with two stale facts
+in the same file that no re-filing would have caught: `Bash(git push *)` had moved from `allow` to
+`ask`, and the deny list grew by three entries on this branch.
+
+A migration that copies a memory to a new home carries its errors with it. This one had been wrong
+for months and was found only by reading it against the file it now sits beside.
 
 **"Migrate to user scope" turned out to mean three different destinations, not one**, and the third
 memory to be acted on is what showed it. `AGENTS.md` is read in full by every session in every
