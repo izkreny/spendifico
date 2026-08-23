@@ -88,6 +88,18 @@ Never, not even with a prompt:
 `enforce_admins` on, so GitHub refuses a direct push from anyone including the owner. These
 patterns only move that refusal from a round trip to the API to an instant local one.
 
+**The two `gh api ... DELETE .../branches/main/protection` entries are a backstop, and a weak
+one by construction.** They exist because `gh api *` is allowed outright, which includes the one
+call that removes branch protection from `main` - the gate that makes "never push to `main`"
+enforceable rather than advisory. Both spellings of the flag are listed because `-X` and
+`--method` are the same thing to `gh` and different strings to a permission pattern.
+
+What they do not do is close the hole. Patterns match by prefix, so
+`gh api repos/izkreny/spendifico/branches/main/protection -X DELETE` - the identical call with
+the flag moved - matches neither entry. Treat them as a guard against the obvious spelling typed
+absent-mindedly, never as a control. The real protection against losing branch protection is that
+removing it is a deliberate act somebody has to mean.
+
 **The bare `git push` entry is the one that matters, and it is not redundant.** Claude Code
 matches a pattern without a trailing `*` exactly, so the two explicit spellings cover only
 themselves. The failure root `CLAUDE.md` actually records is different: HEAD silently moves to
