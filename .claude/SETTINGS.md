@@ -45,20 +45,31 @@ click-throughed.
 command with `-X POST` writes to GitHub. Nothing in a permission pattern can tell those
 apart, so it is treated as a write.
 
-**`gh api graphql *` is allowed while `gh api *` still asks, and the split is the point.**
-Answering a code review means one GraphQL read of every inline thread and one GraphQL mutation
-per reply, so a prompt per reply makes a review round unusable - eight findings meant eight
-approvals before this changed. That is the case this allows.
+**`gh api *` is allowed outright, and that is a wider grant than it looks.** Answering a code
+review means one GraphQL read of every inline thread and one GraphQL mutation per reply, so a
+prompt per reply makes a review round unusable - eight findings meant eight approvals before
+this changed.
 
-The REST half stays behind the prompt because that is where the destructive writes are:
-repository settings, merge methods, and branch protection on `main`, which a single
-`-X DELETE` removes. Note what this is not: GraphQL can write too, so this is a real loosening
-rather than a read-only carve-out. What makes it acceptable is that the writes it reaches are
-comments and replies - visible, attributable and revertible - and that the merge and protection
-endpoints are not among them.
+**The obvious narrower rule was tried first and does not work.** Allowing `gh api graphql *`
+while leaving `gh api *` in `ask` looks like it grants exactly the review case and withholds the
+REST writes. It grants nothing: **`ask` overrides `allow`**, so a command matching both is asked
+about, and the allow rule is inert. The precedence is `deny` > `ask` > `allow`, and Claude Code
+says so in the prompt itself - "Ask rule `Bash(gh api *)` overrides auto mode for this command."
+
+Nor can the `ask` rule be narrowed to subtract GraphQL. Patterns match by prefix, so
+`Bash(gh api -X *)` catches `gh api -X DELETE repos/...` and misses `gh api repos/... -X DELETE`,
+which is the same command. There is no expressible middle: it is prompts on everything, or
+`gh api` allowed.
+
+**So this grant includes `-X DELETE`.** The one target worth naming is branch protection on
+`main` - `gh api -X DELETE repos/izkreny/spendifico/branches/main/protection` removes the gate
+that makes the "never push to `main`" rule real. Everything else `gh api` reaches is recoverable:
+repository settings flip back, labels rename back, comments delete. Judge the trade knowing that,
+rather than as a read-only convenience.
 
 `gh issue view`, `gh issue list` and `gh label list` are plain reads, and were prompting only
-because nothing listed them.
+because nothing listed them. They are now redundant beside `gh api *` in the sense that both
+reach GitHub, but they stay because they are the `gh` porcelain and say what they do.
 
 Setup instructions for `gh` itself, including which OAuth scopes matter, are in the
 `docs/guides/installation.md` section on the GitHub CLI. The `github-pr-flow` skill assumes it is
