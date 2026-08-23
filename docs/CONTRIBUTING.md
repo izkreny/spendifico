@@ -62,16 +62,25 @@ Recovery, if it happens anyway, is `git branch -f <feature> <sha>` and then
 `git status`, `git pull` and every later bare `git push` their reference point. Repair an
 already-pushed branch with `git branch --set-upstream-to=origin/<branch>`.
 
-**Stacked branches are not manually rebased. Ordinary branches are nobody's business but
-yours.** This repo uses GitHub's stacked branches feature routinely: a feature branch is
-often cut from an unmerged parent branch rather than from `main`
-(`feat/PET-14-link-verification-and-sessions` on top of
+**Stacked branches are restacked with `gh stack`, never with a raw `git rebase`. Ordinary
+branches are nobody's business but yours.** This repo uses GitHub's stacked branches
+feature routinely: a feature branch is often cut from an unmerged parent branch rather
+than from `main` (`feat/PET-14-link-verification-and-sessions` on top of
 `feat/PET-50-api-openapi-typegen`, for example), so the parent's PR merges first and
-GitHub retargets and restacks the child itself. A manual `git rebase` there is redundant
-and rewrites history the stack tooling is tracking, so open the PR against the parent, let
-GitHub do the restack, and use `gh stack rebase`/`sync` when a restack really is needed.
-New work that depends on an unmerged branch is cut from that branch's tip, not from
-`main`.
+GitHub retargets the child. Open the PR against the parent, and cut new work that depends
+on an unmerged branch from that branch's tip rather than from `main`.
+
+**Retargeting is not the whole job, because this repo squash-merges.** A squash replaces
+the parent's commits with one new commit on `main`, so the parent's originals stop being
+ancestors of `main` while the child still carries them. GitHub moves the child's base and
+nothing else, which leaves the child's diff showing the parent's changes as well as its
+own. The fix is `gh stack sync`, or `gh stack rebase` when a cascade is needed - run it
+after a parent lands, not before.
+
+**That is why the rule is "not by hand" rather than "never".** A raw `git rebase` rewrites
+history the stack tooling is tracking and desynchronises it; `gh stack` rewrites the same
+commits and keeps its own record straight. Squash-only merges make a restack routine
+rather than exceptional, so reach for the tool rather than avoiding the operation.
 
 **That restriction is about stacks only**, and it is the reason to check before assuming:
 `gh pr view <branch> --json baseRefName` names the PR's base, and a base other than `main`
