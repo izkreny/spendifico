@@ -11,7 +11,7 @@ decision, because JSON cannot hold comments; this file does not restate them.
 **Skills.** A skill is invoked by its own name, so the slash command is the full name in
 the left column (`/repo-dev-setup`). You do not have to remember them: each skill's
 description also matches plain requests, so "set me up locally" reaches `repo-dev-setup`
-on its own. The short forms quoted inside the descriptions (`/dev-setup`, `/commit`) are
+on its own. The short forms quoted inside the descriptions (`/dev-setup`, `/secrets`) are
 matching phrases, not registered commands.
 
 | Skill             | What it does                                                                                                                                                             |

@@ -46,6 +46,7 @@
       "Bash(rm -rf .git*)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
+      "Bash(git push)",
       "Bash(git push origin main)",
       "Bash(git push origin HEAD:main)"
     ]

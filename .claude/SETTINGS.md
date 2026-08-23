@@ -55,13 +55,20 @@ Never, not even with a prompt:
 
 - `rm -rf /`, `rm -rf ~`, `rm -rf .git*` - unrecoverable
 - `git push --force*`, `git push -f*` - rewrites history other people have pulled
-- `git push origin main`, `git push origin HEAD:main` - the hard rule, given a local barrier
+- `git push`, `git push origin main`, `git push origin HEAD:main` - the hard rule, given a
+  local barrier
 
-**The two `main` entries are a speed optimisation, not the gate.** `main` is a protected
-branch with `enforce_admins` on, so GitHub refuses a direct push from anyone including the
-owner. These patterns only move that refusal from a round trip to the API to an instant local
-one, and they are deliberately narrow: a pattern broad enough to catch every spelling of a push
-to `main` would also catch pushes to a branch whose name merely contains it.
+**Those three are a speed optimisation, not the gate.** `main` is a protected branch with
+`enforce_admins` on, so GitHub refuses a direct push from anyone including the owner. These
+patterns only move that refusal from a round trip to the API to an instant local one.
+
+**The bare `git push` entry is the one that matters, and it is not redundant.** Claude Code
+matches a pattern without a trailing `*` exactly, so the two explicit spellings cover only
+themselves. The failure root `CLAUDE.md` actually records is different: HEAD silently moves to
+`main` mid-session, and the command typed then is a bare `git push` against an upstream that is
+now `main`. Denying it exactly is safe in a way a wildcard is not - `Bash(git push *)` would
+also block every legitimate push to a feature branch, and a pattern loose enough to catch
+`git push origin main --no-verify` would catch a branch whose name merely contains `main`.
 
 ### Why there is no `Read(**/.env)` deny rule
 
@@ -93,8 +100,9 @@ because a student who auto-approves from day one never looks at a diff.
 ### `attribution`
 
 Both fields are `""`, which suppresses the `Co-Authored-By: Claude` trailer on commits
-and the attribution line in PR bodies. The `/commit` skill asks for this in prose; this
-setting is what actually enforces it.
+and the attribution line in PR bodies. `docs/CONTRIBUTING.md` states the rule in prose -
+the AI disclaimer replaces the trailer rather than joining it - and this setting is what
+actually enforces it.
 
 > Note: the older `includeCoAuthoredBy` key does the same job but is deprecated. Use
 > `attribution`.
