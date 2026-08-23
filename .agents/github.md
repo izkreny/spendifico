@@ -70,6 +70,32 @@ listing go through `gh api repos/izkreny/spendifico/milestones`.
 **Not used.** They need a `project` token scope the default `gh auth login` does not grant, and a
 board is more than a solo backlog needs. Do not reach for one without being asked.
 
+## Checks before pushing
+
+`github-pr-flow` is told never to invent a repository's check commands and to read them from this
+file. These are the commands; `docs/guides/commands.md` owns them and is where a fuller list lives.
+
+| When | Run, from | Command |
+| --- | --- | --- |
+| Any change at all | repo root | `npm run docs:check` |
+| A request or response body changed | repo root | `npm run api:sync`, then commit both generated artifacts |
+| `backend/` touched | `backend/` | `npm run lint`, `npm run build`, `npm test`, `npm run test:e2e` |
+| `frontend/` touched | `frontend/` | `npm run lint`, `npm run build`, `npm test` |
+
+Three things about that table are traps rather than detail.
+
+**`npm run build` is the typecheck.** Neither app has a standalone `typecheck` script, so skipping
+the build means the branch was never type-checked.
+
+**App commands run from inside the app's own directory.** ESLint resolves its config and plugins
+from that app's `node_modules`, so linting one app from the other's working directory fails in a
+way that reads as a broken config.
+
+**Nothing runs the app suites for you.** `.husky/pre-commit` runs `lint-staged` only - per-app
+ESLint and Prettier over staged files - and prints a reminder about the backend tests rather than
+running them. `npm run docs:check` has no hook at all. CI catches all of it on the pull request,
+which is a round trip rather than a safety net.
+
 ## Branches, commits, pull requests and merges
 
 <!-- sync: docs/CONTRIBUTING.md -->
