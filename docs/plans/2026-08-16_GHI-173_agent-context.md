@@ -195,40 +195,61 @@ Thirty-two memories existed when this ticket started. Two were acted on because 
 | Memory | What it says | Action | Why |
 | --- | --- | --- | --- |
 | `ai-disclaimer-when-posting-as-user` | A fixed disclaimer line opens anything posted as the user | **Deleted** | Instruction list step 3. `AGENTS.md` is canonical for the wording, and both skills state where it applies |
-| `a-missing-key-never-means-unset` | An explicit `fields` list replaces the default set, so an absent key proves nothing | Migrate to user scope | A way of reading any API wrong. Nothing in it is about this repository |
-| `autonomous-execution-no-questions` | Ask nothing until the run is finished and the gates are green | Migrate to user scope | A working preference that holds in every repository |
+| `a-missing-key-never-means-unset` | An explicit `fields` list replaces the default set, so an absent key proves nothing | KB note | A trap to read once, not a rule to obey continuously. Nothing in `/home/izkreny/.agents/` covers it |
+| `autonomous-execution-no-questions` | Ask nothing until the run is finished and the gates are green | `AGENTS.md`, trimmed | Half of it is already structural: `github-implement` spawns a pinned implementer subagent, so the mixed-model half is the skill's job now. Only "ask nothing until the run is finished" is left to record |
 | `backend-endpoint-queue` | The agreed order of the remaining backend endpoint tickets | Delete | Stale twice over: the queue is exhausted, and its ordering was Jira's |
 | `backend-secrets-live-in-env-local` | `backend/.env.local` holds operator secrets and is absent from every worktree | Migrate into the repo | A fact about this repository's layout. `docs/guides/database.md` already states half of it |
 | `blueprint-mcp-trust-levels` | How far to trust each daisyUI Blueprint MCP stage | Keep | Repo-specific and still true; the false positives it names are this codebase's conventions |
 | `central-template-seed-not-applied-by-deploy` | The seed guard skips any already-seeded central database, so template changes need a manual step | Migrate into the repo | A deployment trap with an ops consequence. Its own index line already says a `docs/TODO.md` entry was queued for it |
 | `claude-md-rule-exclusions` | Two working rules deliberately left out of the repo's `CLAUDE.md` | Keep, then re-read | Records a decision nothing else does. Re-read once this ticket's convention rewrite has landed, in case it named one of them |
-| `drafts-go-to-a-stable-directory` | Hand-edited drafts go to a stable directory, then `Ctrl+G`, `:CCDraft` | Migrate to user scope | Nothing repo-specific. Note the conflict: it names `/home/izkreny/.claude/drafts/` and `AGENTS.md` names `/home/izkreny/.agents/drafts/`. The same directory through a symlink, but only one should be written down |
+| `drafts-go-to-a-stable-directory` | Hand-edited drafts go to a stable directory, then `Ctrl+G`, `:CCDraft` | Delete, once the conflict is settled | `AGENTS.md` already has a `## Drafts` section. The memory names a different path for the same directory, so settle which is canonical **before** deleting, not after |
 | `fly-mcp-declined-flyctl-skill` | The Fly MCP was evaluated and declined; drive Fly through `flyctl` | Keep | A decision about this project's deploy, and `.claude/skills/repo-fly` still exists |
-| `force-push-deny-rule` | Force pushes are deny-listed, and `git -C` slips past the pattern | Keep, then extend | Still true. Should gain the two `git push origin main` entries this ticket adds |
+| `force-push-deny-rule` | Force pushes are deny-listed, and `git -C` slips past the pattern | Keep, but **fix the contradiction** | It says to hand a force push over `via ! git push ...`, and `AGENTS.md` says never to prefix a command with `!` because it breaks the paste. One of them is wrong and it is not `AGENTS.md` |
 | `git-hooks-do-not-run-in-worktrees` | Husky hooks fire only where `.husky/_` exists, so check rather than assume | Keep | Repo-specific, and the check it prescribes is still the right one |
-| `github-stacked-branches-no-rebase` | Stacked branches are the norm; read every stacking instruction before acting | **Repointed** | Instruction list step 2. Now names `github-pr-flow`'s `workflows/stack.md`; two further dead pointers inside it were fixed at the same time |
+| `github-stacked-branches-no-rebase` | Stacked branches are the norm; read every stacking instruction before acting | **Repointed** - trim next | Done for this ticket, but it is still long and now duplicates `github-pr-flow`'s `workflows/stack.md`. Worth reducing to a pointer the way the browser one was |
 | `local-dev-runs-in-local-mode` | Local testing runs the backend in local mode, never against Turso Cloud | Migrate into the repo | A fact about `backend/.env` and this repo's boot guard, not about how to work |
 | `no-data-migrations-no-real-users` | No real users exist, so seeded-data changes need no backfill | Migrate into the repo | A property of this project that changes what a migration ticket has to do |
 | `no-personal-data-in-repo` | Commit author metadata still carries a real name and address | Keep | Deliberately the one half of the rule that root `CLAUDE.md` does not carry |
-| `one-decision-at-a-time` | One question per turn in design discussions, never a batch | Migrate to user scope | A working preference that holds everywhere |
-| `opensuse-tumbleweed-zypper-and-mise` | The machine is openSUSE Tumbleweed; `zypper` for system packages, mise for CLIs | Migrate to user scope | A fact about the machine. `AGENTS.md` already has an Environment section for it |
+| `one-decision-at-a-time` | One question per turn in design discussions, never a batch | `AGENTS.md`, `## Working style` | Checked against every user-scope skill: only `socratic-tutor` says anything similar, and that is a different mode. Uncovered |
+| `opensuse-tumbleweed-zypper-and-mise` | The machine is openSUSE Tumbleweed; `zypper` for system packages, mise for CLIs | Delete | `AGENTS.md` has `## Environment` and `## Package management`, and the `package-management` skill carries the backends. Fully covered |
 | `parallel-sessions-jest-oom` | Concurrent jest runs exhaust this machine and no OOM killer exists | Migrate into the repo | Names this repo's two suites and their commands; `docs/guides/troubleshooting.md` is where that belongs |
-| `read-comments-on-cleanup-tasks` | Read descriptions and comments before reporting a discrepancy | Migrate to user scope | A way of auditing any tracker |
-| `satisfy-the-rule-before-amending-it` | Exhaust the options that satisfy a rule before proposing to amend it | Migrate to user scope | Generic. `AGENTS.md` already carries a clause close to it |
+| `read-comments-on-cleanup-tasks` | Read descriptions and comments before reporting a discrepancy | `AGENTS.md`, `## Working style` | `github-solo-dev-repo` owns the tracker but says nothing about reading a body before reporting a discrepancy. Two lines |
+| `satisfy-the-rule-before-amending-it` | Exhaust the options that satisfy a rule before proposing to amend it | `AGENTS.md`, near "Concerns do not block" | Adjacent to an existing rule rather than covered by it: that one says raise and continue, this one says exhaust the compliant options first |
 | `showcase-run-handover` | What PET-80 shipped, plus the live hazards of the showcase run | Delete | Its `PR #93` does not resolve in this repository - the number predates the migration. Anything live in it belongs in `docs/TODO.md` |
-| `show-progress-during-long-tasks` | Emit visible progress during long multi-step work | Migrate to user scope | A working preference with nothing repo-specific in it |
-| `slow-mcp-reads-go-to-a-subagent` | Run hang-prone MCP reads in a subagent when other work can proceed | Migrate to user scope | About harness mechanics, not about this repository |
+| `show-progress-during-long-tasks` | Emit visible progress during long multi-step work | `AGENTS.md`, `## Working style` | `github-implement` ticks boxes as work lands, which is the PR-shaped version. The general preference is uncovered |
+| `slow-mcp-reads-go-to-a-subagent` | Run hang-prone MCP reads in a subagent when other work can proceed | `AGENTS.md` | `github-implement` spawns subagents for implementation, not for slow reads. Different reason, uncovered |
 | `spendifico-migration-staged` | This repo is the migrated home; both halves done, old checkout deleted | Keep | `docs/migration/README.md` covers the migration itself; what this adds is what was deliberately **not** migrated |
-| `stop-after-plan-pr` | After planning, stop at the draft PR and wait | Migrate to user scope | Generic, and now partly owned by `github-pr-flow` - check for overlap before copying it across |
-| `trust-user-assertions-about-their-own-work` | Record a user's statement about their own work as stated | Migrate to user scope | A working preference that holds everywhere |
+| `stop-after-plan-pr` | After planning, stop at the draft PR and wait | Delete | Superseded outright: `github-pr-flow`'s `workflows/open.md` Step 6 **is** this stop, and `workflows/auto.md` documents waiving it as a deliberate trade |
+| `trust-user-assertions-about-their-own-work` | Record a user's statement about their own work as stated | `AGENTS.md`, `## Working style` | A working preference that holds everywhere, uncovered by any skill |
 | `turso-cli-cannot-address-user-databases` | The Turso CLI resolves names against a stale cache and cannot see backend-created databases | Keep | Specific to this project's database-per-user design |
 | `use-chromium-for-browser-automation` | Drive headless Chromium over CDP rather than the extension | **Done** - now a pointer | The method moved to a `browser-verification` skill at user scope, plus a KB note for the incidents behind each gotcha; this repo kept only what is true of this app. The richest copy had been the one another repository could not reach |
-| `use-ripgrep-not-grep` | Never `grep`; always `rg`, plus the `-r` flag trap | Migrate to user scope | A tool preference with nothing repo-specific in it |
-| `while-read-drops-the-last-line` | A file with no trailing newline silently loses its last entry to `while read` | Migrate to user scope | A shell lesson that applies anywhere |
-| `worktree-shell-cwd-trap` | One `cd` to the other path of a worktree-isolated session bricks every later Bash call | Migrate to user scope | About the harness rather than this repository |
+| `use-ripgrep-not-grep` | Never `grep`; always `rg`, plus the `-r` flag trap | `AGENTS.md` | Uncovered anywhere at user scope, and it binds every search in every session - the clearest case in the table |
+| `while-read-drops-the-last-line` | A file with no trailing newline silently loses its last entry to `while read` | KB note | A shell trap worth reading once. Same shape as the API one; the two could share a note |
+| `worktree-shell-cwd-trap` | One `cd` to the other path of a worktree-isolated session bricks every later Bash call | `AGENTS.md`, `## Worktrees` | That section already exists and `github-implement` defers to it for `EnterWorktree`, but neither states the trap itself |
 
-Counts: 3 done, 2 recommended for deletion, 5 to migrate into this repository, 14 to
-`/home/izkreny/.agents/AGENTS.md`, 8 to keep - two of those with an edit noted above.
+Counts after the re-triage: **3 done, 5 recommended for deletion, 5 into this repository, 9 into
+`/home/izkreny/.agents/AGENTS.md`, 2 into the knowledge base, 8 to keep** - three of those with an
+edit named in their row.
+
+**The re-triage happened because acting on one row changed the question.** The first pass wrote
+"migrate to user scope" fourteen times, when `AGENTS.md` was the only user-scope destination the
+table knew about. There are three, and every row was re-read against what
+`/home/izkreny/.agents/` actually holds today rather than what it held when the plan was written -
+twelve skills now, not two.
+
+Three rows moved from "migrate" to "delete" on that reading, because a skill already owns them:
+`stop-after-plan-pr` is `github-pr-flow`'s `workflows/open.md` Step 6 verbatim,
+`opensuse-tumbleweed-zypper-and-mise` is `## Environment` plus the `package-management` skill, and
+`drafts-go-to-a-stable-directory` is `## Drafts`. One row shrank rather than moved:
+`autonomous-execution-no-questions` asked for a mixed-model setup that `github-implement` now
+enforces structurally by spawning a pinned implementer, so only its first clause is left to record.
+
+**One row is a contradiction rather than a duplication, and it is the reason to re-read rather than
+re-file.** `force-push-deny-rule` says to hand a force push to the owner as `! git push
+--force-with-lease ...`; `AGENTS.md` says never to prefix a command with `!`, because the owner
+pastes commands straight out and the `!` breaks the paste. Both were written deliberately, both are
+live, and they cannot both be followed. Fixing that is a smaller job than any migration in this
+table and a more urgent one.
 
 **"Migrate to user scope" turned out to mean three different destinations, not one**, and the third
 memory to be acted on is what showed it. `AGENTS.md` is read in full by every session in every
