@@ -45,6 +45,21 @@ click-throughed.
 command with `-X POST` writes to GitHub. Nothing in a permission pattern can tell those
 apart, so it is treated as a write.
 
+**`gh api graphql *` is allowed while `gh api *` still asks, and the split is the point.**
+Answering a code review means one GraphQL read of every inline thread and one GraphQL mutation
+per reply, so a prompt per reply makes a review round unusable - eight findings meant eight
+approvals before this changed. That is the case this allows.
+
+The REST half stays behind the prompt because that is where the destructive writes are:
+repository settings, merge methods, and branch protection on `main`, which a single
+`-X DELETE` removes. Note what this is not: GraphQL can write too, so this is a real loosening
+rather than a read-only carve-out. What makes it acceptable is that the writes it reaches are
+comments and replies - visible, attributable and revertible - and that the merge and protection
+endpoints are not among them.
+
+`gh issue view`, `gh issue list` and `gh label list` are plain reads, and were prompting only
+because nothing listed them.
+
 Setup instructions for `gh` itself, including which OAuth scopes matter, are in the
 `docs/guides/installation.md` section on the GitHub CLI. The `github-pr-flow` skill assumes it is
 already authenticated.
