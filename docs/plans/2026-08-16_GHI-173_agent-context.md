@@ -222,12 +222,27 @@ Thirty-two memories existed when this ticket started. Two were acted on because 
 | `stop-after-plan-pr` | After planning, stop at the draft PR and wait | Migrate to user scope | Generic, and now partly owned by `github-pr-flow` - check for overlap before copying it across |
 | `trust-user-assertions-about-their-own-work` | Record a user's statement about their own work as stated | Migrate to user scope | A working preference that holds everywhere |
 | `turso-cli-cannot-address-user-databases` | The Turso CLI resolves names against a stale cache and cannot see backend-created databases | Keep | Specific to this project's database-per-user design |
-| `use-chromium-for-browser-automation` | Drive headless Chromium over CDP rather than the extension | Migrate to user scope, as a pointer | `docs/agents/claude-tooling.md` is the richer copy - five gotchas against three - so this should point at it rather than be a third source |
+| `use-chromium-for-browser-automation` | Drive headless Chromium over CDP rather than the extension | **Done** - now a pointer | The method moved to a `browser-verification` skill at user scope, plus a KB note for the incidents behind each gotcha; this repo kept only what is true of this app. The richest copy had been the one another repository could not reach |
 | `use-ripgrep-not-grep` | Never `grep`; always `rg`, plus the `-r` flag trap | Migrate to user scope | A tool preference with nothing repo-specific in it |
 | `while-read-drops-the-last-line` | A file with no trailing newline silently loses its last entry to `while read` | Migrate to user scope | A shell lesson that applies anywhere |
 | `worktree-shell-cwd-trap` | One `cd` to the other path of a worktree-isolated session bricks every later Bash call | Migrate to user scope | About the harness rather than this repository |
 
-Counts: 2 done, 2 recommended for deletion, 5 to migrate into this repository, 15 to `/home/izkreny/.agents/AGENTS.md`, 8 to keep - two of those with an edit noted above.
+Counts: 3 done, 2 recommended for deletion, 5 to migrate into this repository, 14 to
+`/home/izkreny/.agents/AGENTS.md`, 8 to keep - two of those with an edit noted above.
+
+**"Migrate to user scope" turned out to mean three different destinations, not one**, and the third
+memory to be acted on is what showed it. `AGENTS.md` is read in full by every session in every
+directory, so it can only carry what binds every session: the browser method would have grown it by
+about 39% for something a fraction of sessions use. Two lines from it did earn a place - the
+headless-over-extension preference, because it settles a question otherwise asked every time, and
+"a check that has never been seen to fail is not evidence", which came out of that method's pre-fix
+probe and generalises to any test, grep or gate. The rest became a **skill**, which costs a
+description per session and loads its body only when a UI check is the task. The war stories behind
+each gotcha went to a **KB note**, as reference to read rather than instructions to follow.
+
+Weigh the remaining fourteen rows against those three homes rather than against `AGENTS.md` alone.
+The test that decided this one: does it bind every session regardless of task, or only when a
+particular kind of work comes up?
 
 ## What the CLAUDE.md skim found
 
