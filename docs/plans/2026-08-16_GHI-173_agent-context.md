@@ -190,44 +190,44 @@ excludes that directory for exactly this reason.
 
 ## Memory verdicts
 
-Thirty-two memories existed when this ticket started. Two were acted on because the instruction
-list names them; the rest are recorded here with a recommendation and left for the owner, since
-deleting somebody's memory is not a mechanical call.
+Thirty-two memories existed when this ticket started. Two were acted on because the instruction list names them; every other row is a recommendation left for the owner, since deleting somebody's memory is not a mechanical call. Ordered alphabetically, so the table reads against a listing of the memory directory.
 
-**Done.** `ai-disclaimer-when-posting-as-user` deleted - `AGENTS.md` is canonical and both skills
-state where the disclaimer applies. `github-stacked-branches-no-rebase` repointed at
-`github-pr-flow`'s `workflows/stack.md`; two further stale pointers inside it were fixed at the
-same time, one naming a pre-migration branch and pull request.
+| Memory | What it says | Action | Why |
+| --- | --- | --- | --- |
+| `ai-disclaimer-when-posting-as-user` | A fixed disclaimer line opens anything posted as the user | **Deleted** | Instruction list step 3. `AGENTS.md` is canonical for the wording, and both skills state where it applies |
+| `a-missing-key-never-means-unset` | An explicit `fields` list replaces the default set, so an absent key proves nothing | Migrate to user scope | A way of reading any API wrong. Nothing in it is about this repository |
+| `autonomous-execution-no-questions` | Ask nothing until the run is finished and the gates are green | Migrate to user scope | A working preference that holds in every repository |
+| `backend-endpoint-queue` | The agreed order of the remaining backend endpoint tickets | Delete | Stale twice over: the queue is exhausted, and its ordering was Jira's |
+| `backend-secrets-live-in-env-local` | `backend/.env.local` holds operator secrets and is absent from every worktree | Migrate into the repo | A fact about this repository's layout. `docs/guides/database.md` already states half of it |
+| `blueprint-mcp-trust-levels` | How far to trust each daisyUI Blueprint MCP stage | Keep | Repo-specific and still true; the false positives it names are this codebase's conventions |
+| `central-template-seed-not-applied-by-deploy` | The seed guard skips any already-seeded central database, so template changes need a manual step | Migrate into the repo | A deployment trap with an ops consequence. Its own index line already says a `docs/TODO.md` entry was queued for it |
+| `claude-md-rule-exclusions` | Two working rules deliberately left out of the repo's `CLAUDE.md` | Keep, then re-read | Records a decision nothing else does. Re-read once this ticket's convention rewrite has landed, in case it named one of them |
+| `drafts-go-to-a-stable-directory` | Hand-edited drafts go to a stable directory, then `Ctrl+G`, `:CCDraft` | Migrate to user scope | Nothing repo-specific. Note the conflict: it names `/home/izkreny/.claude/drafts/` and `AGENTS.md` names `/home/izkreny/.agents/drafts/`. The same directory through a symlink, but only one should be written down |
+| `fly-mcp-declined-flyctl-skill` | The Fly MCP was evaluated and declined; drive Fly through `flyctl` | Keep | A decision about this project's deploy, and `.claude/skills/repo-fly` still exists |
+| `force-push-deny-rule` | Force pushes are deny-listed, and `git -C` slips past the pattern | Keep, then extend | Still true. Should gain the two `git push origin main` entries this ticket adds |
+| `git-hooks-do-not-run-in-worktrees` | Husky hooks fire only where `.husky/_` exists, so check rather than assume | Keep | Repo-specific, and the check it prescribes is still the right one |
+| `github-stacked-branches-no-rebase` | Stacked branches are the norm; read every stacking instruction before acting | **Repointed** | Instruction list step 2. Now names `github-pr-flow`'s `workflows/stack.md`; two further dead pointers inside it were fixed at the same time |
+| `local-dev-runs-in-local-mode` | Local testing runs the backend in local mode, never against Turso Cloud | Migrate into the repo | A fact about `backend/.env` and this repo's boot guard, not about how to work |
+| `no-data-migrations-no-real-users` | No real users exist, so seeded-data changes need no backfill | Migrate into the repo | A property of this project that changes what a migration ticket has to do |
+| `no-personal-data-in-repo` | Commit author metadata still carries a real name and address | Keep | Deliberately the one half of the rule that root `CLAUDE.md` does not carry |
+| `one-decision-at-a-time` | One question per turn in design discussions, never a batch | Migrate to user scope | A working preference that holds everywhere |
+| `opensuse-tumbleweed-zypper-and-mise` | The machine is openSUSE Tumbleweed; `zypper` for system packages, mise for CLIs | Migrate to user scope | A fact about the machine. `AGENTS.md` already has an Environment section for it |
+| `parallel-sessions-jest-oom` | Concurrent jest runs exhaust this machine and no OOM killer exists | Migrate into the repo | Names this repo's two suites and their commands; `docs/guides/troubleshooting.md` is where that belongs |
+| `read-comments-on-cleanup-tasks` | Read descriptions and comments before reporting a discrepancy | Migrate to user scope | A way of auditing any tracker |
+| `satisfy-the-rule-before-amending-it` | Exhaust the options that satisfy a rule before proposing to amend it | Migrate to user scope | Generic. `AGENTS.md` already carries a clause close to it |
+| `showcase-run-handover` | What PET-80 shipped, plus the live hazards of the showcase run | Delete | Its `PR #93` does not resolve in this repository - the number predates the migration. Anything live in it belongs in `docs/TODO.md` |
+| `show-progress-during-long-tasks` | Emit visible progress during long multi-step work | Migrate to user scope | A working preference with nothing repo-specific in it |
+| `slow-mcp-reads-go-to-a-subagent` | Run hang-prone MCP reads in a subagent when other work can proceed | Migrate to user scope | About harness mechanics, not about this repository |
+| `spendifico-migration-staged` | This repo is the migrated home; both halves done, old checkout deleted | Keep | `docs/migration/README.md` covers the migration itself; what this adds is what was deliberately **not** migrated |
+| `stop-after-plan-pr` | After planning, stop at the draft PR and wait | Migrate to user scope | Generic, and now partly owned by `github-pr-flow` - check for overlap before copying it across |
+| `trust-user-assertions-about-their-own-work` | Record a user's statement about their own work as stated | Migrate to user scope | A working preference that holds everywhere |
+| `turso-cli-cannot-address-user-databases` | The Turso CLI resolves names against a stale cache and cannot see backend-created databases | Keep | Specific to this project's database-per-user design |
+| `use-chromium-for-browser-automation` | Drive headless Chromium over CDP rather than the extension | Migrate to user scope, as a pointer | `docs/agents/claude-tooling.md` is the richer copy - five gotchas against three - so this should point at it rather than be a third source |
+| `use-ripgrep-not-grep` | Never `grep`; always `rg`, plus the `-r` flag trap | Migrate to user scope | A tool preference with nothing repo-specific in it |
+| `while-read-drops-the-last-line` | A file with no trailing newline silently loses its last entry to `while read` | Migrate to user scope | A shell lesson that applies anywhere |
+| `worktree-shell-cwd-trap` | One `cd` to the other path of a worktree-isolated session bricks every later Bash call | Migrate to user scope | About the harness rather than this repository |
 
-**Recommend deleting, both stale.** `backend-endpoint-queue` - the queue is exhausted and its
-ordering was Jira's. `showcase-run-handover` - its `PR #93` does not resolve in this repository at
-all, because the number is from before the migration; anything live in it belongs in `docs/TODO.md`.
-
-**Recommend migrating into this repository**, because they are facts about it rather than about how
-to work: `central-template-seed-not-applied-by-deploy` (its own index line already says a TODO entry
-was queued for it), `no-data-migrations-no-real-users`, `local-dev-runs-in-local-mode`,
-`parallel-sessions-jest-oom`, and `backend-secrets-live-in-env-local`.
-
-**Recommend migrating to `/home/izkreny/.agents/AGENTS.md`**, because nothing in them is about this
-repository: `use-ripgrep-not-grep`, `one-decision-at-a-time`, `show-progress-during-long-tasks`,
-`autonomous-execution-no-questions`, `stop-after-plan-pr`, `satisfy-the-rule-before-amending-it`,
-`trust-user-assertions-about-their-own-work`, `drafts-go-to-a-stable-directory`,
-`read-comments-on-cleanup-tasks`, `slow-mcp-reads-go-to-a-subagent`,
-`a-missing-key-never-means-unset`, `while-read-drops-the-last-line`, `worktree-shell-cwd-trap`,
-`opensuse-tumbleweed-zypper-and-mise` and `use-chromium-for-browser-automation`.
-
-Two of those carry a note. `use-chromium-for-browser-automation` duplicates
-`docs/agents/claude-tooling.md`, which is the richer copy - five gotchas against three - so the
-memory should become a pointer rather than a second source. And `drafts-go-to-a-stable-directory`
-names `/home/izkreny/.claude/drafts/` while `AGENTS.md` names `/home/izkreny/.agents/drafts/`; those
-are the same directory through a symlink, but only one of them should be written down.
-
-**Keep as they are**, repo-specific and still true: `git-hooks-do-not-run-in-worktrees`,
-`turso-cli-cannot-address-user-databases`, `no-personal-data-in-repo`, `blueprint-mcp-trust-levels`,
-`fly-mcp-declined-flyctl-skill`, `claude-md-rule-exclusions`, `force-push-deny-rule` and
-`spendifico-migration-staged`. The last two need a touch rather than a verdict:
-`force-push-deny-rule` should gain the two `git push origin main` entries this ticket adds, and
-`claude-md-rule-exclusions` should be re-read once the convention rewrite lands.
+Counts: 2 done, 2 recommended for deletion, 5 to migrate into this repository, 15 to `/home/izkreny/.agents/AGENTS.md`, 8 to keep - two of those with an edit noted above.
 
 ## What the CLAUDE.md skim found
 
