@@ -44,9 +44,16 @@ that work is done alongside, reported, and recorded here with a verdict per file
 
 `.claude/agents/linus-reviewer.md` is **moved rather than superseded**. It is a review persona
 rather than an analyser, so nothing at user scope replaces it - and nothing about it is specific to
-this repository either, so it goes to `/home/izkreny/.agents/agents/` where every repository gets it. The four
-remaining subagents stay: `debugger` is generic but unexamined, and `nestjs-specialist`,
-`nextjs-specialist` and `test-automator` all name these two apps.
+this repository either, so it goes to `/home/izkreny/.agents/agents/` where every repository gets it.
+
+**`debugger` and `test-automator` follow it, on the owner's call in review.** The first pass kept
+all four remaining subagents on the reading that `debugger` was "generic but unexamined" and that
+`test-automator` named these two apps. Examined, the split falls differently: `debugger` names no
+framework at all, and `test-automator` names a stack only in its *guidance*, which is a reason to
+rewrite it rather than to pin it here. Only `nestjs-specialist` and `nextjs-specialist` are
+genuinely about these two apps, and they stay. `test-automator` was made stack-neutral on the way
+out and told to read the repository's own test setup first, because at user scope it is offered in
+repositories built on none of what it used to assume.
 
 **That move needs wiring that does not exist yet.** `/home/izkreny/.claude/` symlinks exactly three things into
 `/home/izkreny/.agents/` - `CLAUDE.md`, `drafts` and `skills` - and there is no `agents` among them, nor an
@@ -91,13 +98,17 @@ leave them enforced only by a user-scope skill, and CI cannot reach one: the `co
 `npm run docs:check` and nothing else. Both copies keep them until the Python rewrite of the
 repo-specific checks lands, which step 12 already names as a separate branch.
 
-**The vendored `.claude/skills/gh-stack/` is deleted, and the two copies are provably the same
-tree.** Its frontmatter pins the install - `github-ref: refs/tags/v0.1.0`, `github-tree-sha:
-c95c8b5b4dd850f3fef007b304428f5684f2fb87` - and `/home/izkreny/.agents/.skill-lock.json` records
-`skillFolderHash` at that same SHA for the user-scope install. So this is not a judgement about
-which copy is better; they are byte-identical, and the repo copy is the redundant one. Note for
-anyone refreshing it later that upstream's own frontmatter disagrees with itself, tagging `v0.1.0`
-while declaring `version: 0.0.9`.
+**The vendored `.claude/skills/gh-stack/` is deleted as redundant against the user-scope install
+of the same skill.** It was not a judgement about which copy was better.
+
+The first version of this paragraph proved the two trees identical by quoting a `github-tree-sha`
+from the skill's frontmatter against a `skillFolderHash` in `/home/izkreny/.agents/.skill-lock.json`.
+**Do not restate provenance that way.** The skill was updated at user scope during this ticket and
+every one of those facts changed in a single step: the frontmatter no longer carries `github-path`,
+`github-ref` or `github-tree-sha`, the lock file no longer exists, and the self-contradicting
+version it noted - tagged `v0.1.0` while declaring `version: 0.0.9`, which was the interesting part
+- has been fixed upstream. The decision survived all of it; only its evidence rotted. Same failure
+as the skill count further down, and the same fix: name the reason, not the fingerprint.
 
 **The branch format does not change.** Step 6 of the instruction list rewrites the commit header,
 the PR title and the issue title, and says nothing about branches - which reads as an omission and
@@ -168,16 +179,16 @@ excludes that directory for exactly this reason.
 
 **Stage 4 - memory checkout**
 
-- [ ] Repoint the `github-stacked-branches-no-rebase` memory at `github-pr-flow`'s `workflows/stack.md`, replacing the deleted `repo-stack`
-- [ ] Retire the `ai-disclaimer-when-posting-as-user` memory: `/home/izkreny/.agents/AGENTS.md` is canonical and both skills state where the disclaimer applies
-- [ ] Give every remaining memory a verdict - migrate to `/home/izkreny/.agents/`, migrate into this repo, keep as a working preference, or delete as stale - and record the table here
-- [ ] Add `--no-ignore` to the absence-sweep form in `CLAUDE.md:286` and `docs/agents/conventions.md:171`, with the gitignored-secret incident as the reason: `--hidden` alone reported a clean sweep over a real token
-- [ ] Land `use-ripgrep-not-grep` in `/home/izkreny/.agents/AGENTS.md` only together with the three user-scope `grep` call sites it contradicts
-- [ ] Split `drafts-go-to-a-stable-directory` before deleting it: the `Ctrl+G`, `:CCDraft` handover into `AGENTS.md`'s `## Drafts`, the tooling and its four traps into a KB note
-- [ ] Put "never infer the distro from a tool's own output" into `package-management/SKILL.md` before deleting `opensuse-tumbleweed-zypper-and-mise`
-- [ ] Keep the stacked-branches-only scope clause when trimming `github-stacked-branches-no-rebase`, or move it into `workflows/stack.md` first
-- [ ] State the boundary against **Verify, do not recall** when writing `trust-user-assertions-about-their-own-work` into `AGENTS.md`, rather than leaving two rules in one section that pull opposite ways
-- [ ] Update `MEMORY.md` to match
+- [ ] Repoint the `github-stacked-branches-no-rebase` memory at `github-pr-flow`'s `workflows/stack.md`, replacing the deleted `repo-stack` - **drafted, not applied**: the change is user-scope, outside this repo's diff, and lands when the owner hands the draft to the skill agent. See `memories-to-user-scope_ed7baf21-2815-4636-b7b1-6568f8f98cf8.md` §6
+- [x] Retire the `ai-disclaimer-when-posting-as-user` memory: `/home/izkreny/.agents/AGENTS.md` is canonical and both skills state where the disclaimer applies
+- [x] Give every remaining memory a verdict - migrate to `/home/izkreny/.agents/`, migrate into this repo, keep as a working preference, or delete as stale - and record the table here
+- [x] Add `--no-ignore` to the absence-sweep form in `CLAUDE.md:286` and `docs/agents/conventions.md:171`, with the gitignored-secret incident as the reason: `--hidden` alone reported a clean sweep over a real token
+- [x] **Superseded on review.** `use-ripgrep-not-grep` does not land in `AGENTS.md` at all: the owner's PR #174 reply established that an agent session can run with no `Grep` tool and a harness instruction to prefer Bash, so a "never grep" rule in a file every session reads would ship pre-violated by the three user-scope files that already tell an agent to run `grep`. Only the flag-trap catalogue survives, as a KB note
+- [ ] Split `drafts-go-to-a-stable-directory` before deleting it: the `Ctrl+G`, `:CCDraft` handover into `AGENTS.md`'s `## Drafts`, the tooling and its four traps into a KB note - **drafted, not applied**, in both handoff files above. The memory itself is already deleted from this session's memory directory, on the owner's explicit instruction to delete after drafting rather than after application
+- [ ] Put "never infer the distro from a tool's own output" into `package-management/SKILL.md` before deleting `opensuse-tumbleweed-zypper-and-mise` - **drafted, not applied**; same handoff and same owner instruction as above
+- [ ] Keep the stacked-branches-only scope clause when trimming `github-stacked-branches-no-rebase`, or move it into `workflows/stack.md` first - **drafted, not applied**; folded into the same handoff item as the repoint above
+- [ ] State the boundary against **Verify, do not recall** when writing `trust-user-assertions-about-their-own-work` into `AGENTS.md`, rather than leaving two rules in one section that pull opposite ways - **drafted, not applied**; the memory itself is already deleted, per the same owner instruction
+- [x] Update `MEMORY.md` to match
 
 **Stage 5 - GitHub state, which lands outside the diff**
 
@@ -201,36 +212,36 @@ Thirty-two memories existed when this ticket started. Two were acted on because 
 | Memory | What it says | Action | Why |
 | --- | --- | --- | --- |
 | `ai-disclaimer-when-posting-as-user` | A fixed disclaimer line opens anything posted as the user | **Deleted** | Instruction list step 3. `AGENTS.md` is canonical for the wording, and both skills state where it applies |
-| `a-missing-key-never-means-unset` | An explicit `fields` list replaces the default set, so an absent key proves nothing | KB note | A trap to read once, not a rule to obey continuously. Nothing in `/home/izkreny/.agents/` covers it |
-| `autonomous-execution-no-questions` | Ask nothing until the run is finished and the gates are green | `AGENTS.md`, trimmed | Half of it is already structural: `github-implement` spawns a pinned implementer subagent, so the mixed-model half is the skill's job now. Only "ask nothing until the run is finished" is left to record |
-| `backend-endpoint-queue` | The agreed order of the remaining backend endpoint tickets | Delete | Stale twice over: the queue is exhausted, and its ordering was Jira's |
-| `backend-secrets-live-in-env-local` | `backend/.env.local` holds operator secrets and is absent from every worktree | Migrate into the repo | A fact about this repository's layout. `docs/guides/database.md` already states half of it |
-| `blueprint-mcp-trust-levels` | How far to trust each daisyUI Blueprint MCP stage | Keep | Repo-specific and still true; the false positives it names are this codebase's conventions |
-| `central-template-seed-not-applied-by-deploy` | The seed guard skips any already-seeded central database, so template changes need a manual step | Migrate into the repo | A deployment trap with an ops consequence. Its own index line already says a `docs/TODO.md` entry was queued for it |
-| `claude-md-rule-exclusions` | Two working rules deliberately left out of the repo's `CLAUDE.md` | Keep, then re-read | Records a decision nothing else does. Re-read once this ticket's convention rewrite has landed, in case it named one of them |
-| `drafts-go-to-a-stable-directory` | Hand-edited drafts go to a stable directory, then `Ctrl+G`, `:CCDraft` | Split, then delete | The conflict is settled by construction: `/home/izkreny/.claude/drafts` is a symlink to `/home/izkreny/.agents/drafts`, so the two names are one directory and only the `~` breaks **Path notation**. But `rg CCDraft` over the whole tree returns nothing - the handover line, both installed halves and four traps survive nowhere. One line into `## Drafts`, the tooling and the traps into a KB note, then delete: the treatment the browser row got |
-| `fly-mcp-declined-flyctl-skill` | The Fly MCP was evaluated and declined; drive Fly through `flyctl` | Keep | A decision about this project's deploy, and `.claude/skills/repo-fly` still exists |
-| `force-push-deny-rule` | Force pushes and the bare `git push` are deny-listed, and `git -C` slips past the pattern | **Fixed**, keep | The `!`-prefix instruction is gone - `AGENTS.md` forbids it because it breaks the owner's paste. Also corrected two stale facts: `git push *` is in `ask` not `allow`, and the deny list grew by three entries on this branch. Now records the bare-push deny's false positive too |
-| `git-hooks-do-not-run-in-worktrees` | Husky hooks fire only where `.husky/_` exists, so check rather than assume | Keep | Repo-specific, and the check it prescribes is still the right one |
-| `github-stacked-branches-no-rebase` | Stacked branches are the norm; read every stacking instruction before acting | **Repointed** - trim around one clause | Done for this ticket, and it duplicates `github-pr-flow`'s `workflows/stack.md` everywhere except the clause it exists for. That the no-rebase rule covers **stacked branches only**, an ordinary branch off `main` being freely rebasable, is absent from `stack.md:43`; keep it when trimming, or move it there first. Two body facts are dead pre-migration PR numbers - stack #7 and PR #55 |
-| `local-dev-runs-in-local-mode` | Local testing runs the backend in local mode, never against Turso Cloud | Migrate into the repo | A fact about `backend/.env` and this repo's boot guard, not about how to work |
-| `no-data-migrations-no-real-users` | No real users exist, so seeded-data changes need no backfill | Migrate into the repo | A property of this project that changes what a migration ticket has to do |
-| `no-personal-data-in-repo` | Commit author metadata still carries a real name and address | Keep | Deliberately the one half of the rule that root `CLAUDE.md` does not carry |
+| `a-missing-key-never-means-unset` | An explicit `fields` list replaces the default set, so an absent key proves nothing | KB note, shared | A trap to read once, not a rule to obey continuously. Nothing in `/home/izkreny/.agents/` covers it |
+| `autonomous-execution-no-questions` | Ask nothing until the run is finished and the gates are green | `AGENTS.md`, one rule | Half of it is already structural: `github-implement` spawns a pinned implementer subagent, so the mixed-model half is the skill's job now. Only "ask nothing until the run is finished" is left to record |
+| `backend-endpoint-queue` | The agreed order of the remaining backend endpoint tickets | **Deleted** | Stale twice over: the queue is exhausted, and its ordering was Jira's |
+| `backend-secrets-live-in-env-local` | `backend/.env.local` holds operator secrets and is absent from every worktree | `backend/CLAUDE.md` | A fact about this repository's layout. `docs/guides/database.md` already states half of it |
+| `blueprint-mcp-trust-levels` | How far to trust each daisyUI Blueprint MCP stage | Split: new user skill + `frontend/CLAUDE.md` | Repo-specific and still true; the false positives it names are this codebase's conventions |
+| `central-template-seed-not-applied-by-deploy` | The seed guard skips any already-seeded central database, so template changes need a manual step | `backend/CLAUDE.md` + `docs/guides/database.md` | A deployment trap with an ops consequence. Its own index line already says a `docs/TODO.md` entry was queued for it |
+| `claude-md-rule-exclusions` | Two working rules deliberately left out of the repo's `CLAUDE.md` | **Deleted** | Records a decision nothing else does. Re-read once this ticket's convention rewrite has landed, in case it named one of them |
+| `drafts-go-to-a-stable-directory` | Hand-edited drafts go to a stable directory, then `Ctrl+G`, `:CCDraft` | Split: `AGENTS.md` + KB note | The conflict is settled by construction: `/home/izkreny/.claude/drafts` is a symlink to `/home/izkreny/.agents/drafts`, so the two names are one directory and only the `~` breaks **Path notation**. But `rg CCDraft` over the whole tree returns nothing - the handover line, both installed halves and four traps survive nowhere. One line into `## Drafts`, the tooling and the traps into a KB note, then delete: the treatment the browser row got |
+| `fly-mcp-declined-flyctl-skill` | The Fly MCP was evaluated and declined; drive Fly through `flyctl` | `.claude/skills/repo-fly/` | A decision about this project's deploy, and `.claude/skills/repo-fly` still exists |
+| `force-push-deny-rule` | Force pushes and the bare `git push` are deny-listed, and `git -C` slips past the pattern | `.claude/SETTINGS.md` | The `!`-prefix instruction is gone - `AGENTS.md` forbids it because it breaks the owner's paste. Also corrected two stale facts: `git push *` is in `ask` not `allow`, and the deny list grew by three entries on this branch. Now records the bare-push deny's false positive too |
+| `git-hooks-do-not-run-in-worktrees` | Husky hooks fire only where `.husky/_` exists, so check rather than assume | Split: `.agents/github.md` + `AGENTS.md` | Repo-specific, and the check it prescribes is still the right one |
+| `github-stacked-branches-no-rebase` | Stacked branches are the norm; read every stacking instruction before acting | `workflows/stack.md`, one clause | Done for this ticket, and it duplicates `github-pr-flow`'s `workflows/stack.md` everywhere except the clause it exists for. That the no-rebase rule covers **stacked branches only**, an ordinary branch off `main` being freely rebasable, is absent from `stack.md:43`; keep it when trimming, or move it there first. Two body facts are dead pre-migration PR numbers - stack #7 and PR #55 |
+| `local-dev-runs-in-local-mode` | Local testing runs the backend in local mode, never against Turso Cloud | `backend/CLAUDE.md` + `docs/guides/database.md` | A fact about `backend/.env` and this repo's boot guard, not about how to work |
+| `no-data-migrations-no-real-users` | No real users exist, so seeded-data changes need no backfill | **Kept** | A property of this project that changes what a migration ticket has to do |
+| `no-personal-data-in-repo` | Commit author metadata still carries a real name and address | **Kept**, cross-linked | Deliberately the one half of the rule that root `CLAUDE.md` does not carry |
 | `one-decision-at-a-time` | One question per turn in design discussions, never a batch | `AGENTS.md`, `## Working style` | Checked against every user-scope skill: only `socratic-tutor` says anything similar, and that is a different mode. Uncovered |
-| `opensuse-tumbleweed-zypper-and-mise` | The machine is openSUSE Tumbleweed; `zypper` for system packages, mise for CLIs | Delete, after one sentence lands | The zypper/mise split is covered twice over, by `AGENTS.md`'s `## Environment` and `## Package management` and by the `package-management` skill. Its `How to apply` is not: **never infer the distro from a tool's own output**, `/etc/os-release` being the authority. That belongs in `package-management/SKILL.md`, where the question arises |
-| `parallel-sessions-jest-oom` | Concurrent jest runs exhaust this machine and no OOM killer exists | Migrate into the repo | Names this repo's two suites and their commands; `docs/guides/troubleshooting.md` is where that belongs |
-| `read-comments-on-cleanup-tasks` | Read descriptions and comments before reporting a discrepancy | `AGENTS.md`, `## Working style` | `github-solo-dev-repo` owns the tracker but says nothing about reading a body before reporting a discrepancy. Two lines |
-| `satisfy-the-rule-before-amending-it` | Exhaust the options that satisfy a rule before proposing to amend it | `AGENTS.md`, near "Concerns do not block" | Adjacent to an existing rule rather than covered by it: that one says raise and continue, this one says exhaust the compliant options first |
-| `showcase-run-handover` | What PET-80 shipped, plus the live hazards of the showcase run | Delete | Its `PR #93` does not resolve in this repository - the number predates the migration. Nothing needs rescuing: the Gemini 503-as-500 defect is already at `docs/TODO.md:3317`, and the never-touch-the-login-form supersede rule at `docs/showcase/README.md:20` and in three script headers, one of which calls itself a comment that cannot be dropped |
+| `opensuse-tumbleweed-zypper-and-mise` | The machine is openSUSE Tumbleweed; `zypper` for system packages, mise for CLIs | `package-management/SKILL.md` | The zypper/mise split is covered twice over, by `AGENTS.md`'s `## Environment` and `## Package management` and by the `package-management` skill. Its `How to apply` is not: **never infer the distro from a tool's own output**, `/etc/os-release` being the authority. That belongs in `package-management/SKILL.md`, where the question arises |
+| `parallel-sessions-jest-oom` | Concurrent jest runs exhaust this machine and no OOM killer exists | `docs/guides/troubleshooting.md` | Names this repo's two suites and their commands; `docs/guides/troubleshooting.md` is where that belongs |
+| `read-comments-on-cleanup-tasks` | Read descriptions and comments before reporting a discrepancy | `github-solo-dev-repo` | `github-solo-dev-repo` owns the tracker but says nothing about reading a body before reporting a discrepancy. Two lines |
+| `satisfy-the-rule-before-amending-it` | Exhaust the options that satisfy a rule before proposing to amend it | `AGENTS.md`, after "Concerns do not block" | Adjacent to an existing rule rather than covered by it: that one says raise and continue, this one says exhaust the compliant options first |
+| `showcase-run-handover` | What PET-80 shipped, plus the live hazards of the showcase run | **Deleted** | Its `PR #93` does not resolve in this repository - the number predates the migration. Nothing needs rescuing: the Gemini 503-as-500 defect is already at `docs/TODO.md:3317`, and the never-touch-the-login-form supersede rule at `docs/showcase/README.md:20` and in three script headers, one of which calls itself a comment that cannot be dropped |
 | `show-progress-during-long-tasks` | Emit visible progress during long multi-step work | `AGENTS.md`, `## Working style` | `github-implement` ticks boxes as work lands, which is the PR-shaped version. The general preference is uncovered |
-| `slow-mcp-reads-go-to-a-subagent` | Run hang-prone MCP reads in a subagent when other work can proceed | `AGENTS.md` | `github-implement` spawns subagents for implementation, not for slow reads. Different reason, uncovered |
-| `spendifico-migration-staged` | This repo is the migrated home; both halves done, old checkout deleted | Keep | `docs/migration/README.md` covers the migration itself; what this adds is what was deliberately **not** migrated |
-| `stop-after-plan-pr` | After planning, stop at the draft PR and wait | Delete | Superseded outright: `github-pr-flow`'s `workflows/open.md` Step 6 **is** this stop, and `workflows/auto.md` documents waiving it as a deliberate trade |
-| `trust-user-assertions-about-their-own-work` | Record a user's statement about their own work as stated | `AGENTS.md`, `## Working style` | A working preference that holds everywhere, uncovered by any skill. It lands beside **Verify, do not recall** and pulls the other way, so its wording has to carry the boundary rather than leave two live rules: verification governs claims a file can settle, this one governs claims about the owner's own work and intent, where asking once **is** the verification and re-raising it afterwards is the defect. `use-ripgrep-not-grep` already links here for the sibling failure - never let a hedge stand in for verification |
-| `turso-cli-cannot-address-user-databases` | The Turso CLI resolves names against a stale cache and cannot see backend-created databases | Keep | Specific to this project's database-per-user design |
-| `use-chromium-for-browser-automation` | Drive headless Chromium over CDP rather than the extension | **Done** - now a pointer | The method moved to a `browser-verification` skill at user scope, plus a KB note for the incidents behind each gotcha; this repo kept only what is true of this app. The richest copy had been the one another repository could not reach |
-| `use-ripgrep-not-grep` | Never `grep`; always `rg`, plus the `-r` flag trap | `AGENTS.md`, not alone | Uncovered anywhere at user scope, and it binds every search in every session - the clearest case in the table. But three user-scope files instruct an agent to run `grep`, so the rule cannot land by itself: `skills-maker/workflows/new.md:9`, `skills-maker/workflows/check.md:31` and `package-management/SKILL.md:19` |
-| `while-read-drops-the-last-line` | A file with no trailing newline silently loses its last entry to `while read` | KB note | A shell trap worth reading once. Same shape as the API one; the two could share a note |
+| `slow-mcp-reads-go-to-a-subagent` | Run hang-prone MCP reads in a subagent when other work can proceed | `AGENTS.md`, `## Working style` | `github-implement` spawns subagents for implementation, not for slow reads. Different reason, uncovered |
+| `spendifico-migration-staged` | This repo is the migrated home; both halves done, old checkout deleted | **Kept** | `docs/migration/README.md` covers the migration itself; what this adds is what was deliberately **not** migrated |
+| `stop-after-plan-pr` | After planning, stop at the draft PR and wait | **Deleted** | Superseded outright: `github-pr-flow`'s `workflows/open.md` Step 6 **is** this stop, and `workflows/auto.md` documents waiving it as a deliberate trade |
+| `trust-user-assertions-about-their-own-work` | Record a user's statement about their own work as stated | `AGENTS.md`, with its boundary | A working preference that holds everywhere, uncovered by any skill. It lands beside **Verify, do not recall** and pulls the other way, so its wording has to carry the boundary rather than leave two live rules: verification governs claims a file can settle, this one governs claims about the owner's own work and intent, where asking once **is** the verification and re-raising it afterwards is the defect. `use-ripgrep-not-grep` already links here for the sibling failure - never let a hedge stand in for verification |
+| `turso-cli-cannot-address-user-databases` | The Turso CLI resolves names against a stale cache and cannot see backend-created databases | **Kept** | Specific to this project's database-per-user design |
+| `use-chromium-for-browser-automation` | Drive headless Chromium over CDP rather than the extension | **Deleted**, all three homes verified | The method moved to a `browser-verification` skill at user scope, plus a KB note for the incidents behind each gotcha; this repo kept only what is true of this app. The richest copy had been the one another repository could not reach |
+| `use-ripgrep-not-grep` | Never `grep`; always `rg`, plus the `-r` flag trap | KB note; the preference dropped | Uncovered anywhere at user scope, and it binds every search in every session - the clearest case in the table. But three user-scope files instruct an agent to run `grep`, so the rule cannot land by itself: `skills-maker/workflows/new.md:9`, `skills-maker/workflows/check.md:31` and `package-management/SKILL.md:19` |
+| `while-read-drops-the-last-line` | A file with no trailing newline silently loses its last entry to `while read` | KB note, shared | A shell trap worth reading once. Same shape as the API one; the two could share a note |
 | `worktree-shell-cwd-trap` | One `cd` to the other path of a worktree-isolated session bricks every later Bash call | `AGENTS.md`, `## Worktrees` | That section already exists and `github-implement` defers to it for `EnterWorktree`, but neither states the trap itself |
 
 **The table is the authority on its own verdicts, and no tally of them is kept beside it.** Three

@@ -37,14 +37,18 @@ conventions it records were silently ignored. Each skill treats it as winning on
 conflict with its own defaults. Nothing under `.claude/skills/` names it, because nothing in this
 repository consumes it.
 
-**Agents** (delegated subtasks with their own context): `debugger`, `test-automator`,
-`nestjs-specialist` and `nextjs-specialist` - these last two fetch and synthesise the live
-official docs, which is different from the passive rule libraries above.
+**Agents** (delegated subtasks with their own context): `nestjs-specialist` and
+`nextjs-specialist`. Both fetch and synthesise the live official docs, which is different from
+the passive rule libraries above, and both name these two apps - which is why they are the only
+two left here.
 
-Two are gone from here. `code-reviewer` is superseded by the review rules in the user's own
-`AGENTS.md`, and `linus-reviewer` moved to user scope rather than being retired: it is a blunt
-review persona with no tools and nothing about it was specific to this repository, so it now
-loads in every repository instead of one.
+Four are gone. `code-reviewer` is superseded by the review rules in the user's own `AGENTS.md`.
+`linus-reviewer`, `debugger` and `test-automator` moved to user scope rather than being retired:
+nothing about any of them was specific to this repository, so each now loads in every repository
+instead of one. `test-automator` was rewritten on the way out - its guidance named Jest, NestJS
+and React Testing Library throughout, which would have read as confidently wrong in a repository
+built on none of them, so it now reads the repository's own test setup before proposing
+anything.
 
 **Permissions.** `.claude/settings.json` is committed and applies to everyone. Notably,
 `Edit` and `Write` are **not** pre-approved, so Claude asks before every file change and

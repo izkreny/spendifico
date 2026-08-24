@@ -108,6 +108,21 @@ now `main`. Denying it exactly is safe in a way a wildcard is not - `Bash(git pu
 also block every legitimate push to a feature branch, and a pattern loose enough to catch
 `git push origin main --no-verify` would catch a branch whose name merely contains `main`.
 
+**That entry has a false positive worth knowing, because the way past it is a specific command.**
+It fires on the ordinary push of a feature branch that already has an upstream, not only on the
+accident it was added for. Nothing in the pattern can tell the two apart: at match time the string
+carries no branch name at all. The way through is the explicit form, which names its target and so
+cannot be the accident - `git push origin <branch>`. Reach for that rather than asking for the deny
+to be relaxed.
+
+**No `git push` pattern can be treated as an authorization boundary, because `git -C` walks around
+every one of them.** `git -C <path> push --force-with-lease ...` matches none of the entries above,
+for the mundane reason that the command does not begin with `git push`. That is a property of prefix
+matching, not a loophole anyone opened deliberately, and it means the deny list is a guard against
+the obvious spelling typed absent-mindedly rather than a control. **Never reach for `git -C`, or any
+other rephrasing, to get around a deny rule** - the rule is the decision, and the pattern is only
+how it is spelled.
+
 ### Why there is no `Read(**/.env)` deny rule
 
 Blocking `.env` looks like the obviously safe choice, and it was in this file at one

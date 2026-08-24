@@ -168,9 +168,15 @@ indistinguishable from a clean one. During the Expensa to Spendifico rename a pl
 `rg -in expensa` reported nothing under `backend/` while `backend/.env.example` carried
 four hits, in the one file a fresh clone copies verbatim - ripgrep skips dotfiles and
 dot-directories unless told otherwise, so the sweep form is
-`rg -in --hidden PAT -g '!node_modules' -g '!.git/**' -g '!.env'`: exclude `.git/**` or it
-walks every packed object, and `.env` so real secrets are not read back into the
-transcript. `grep -r` traverses dotfiles by default and needs the exclusions instead.
+`rg -in --hidden --no-ignore PAT -g '!node_modules' -g '!.git/**' -g '!.env'`: exclude
+`.git/**` or it walks every packed object, and `.env` so real secrets are not read back into
+the transcript. **Both coverage flags are required, and reaching for one of them is the
+common mistake.** `--hidden` stops ripgrep skipping dotfiles; `--no-ignore` stops it skipping
+gitignored ones. A second incident, on 2026-08-16, is what proved the difference: a
+credential sweep run with `--hidden` alone reported clean, while the only real token in the
+tree sat in a gitignored env file under `backend/`. Re-run with `--no-ignore` it appeared
+immediately. `grep -r` traverses dotfiles by default and needs the exclusions instead, but it
+honours no ignore file at all, which is a different coverage profile rather than a better one.
 Either way, say which flags a sweep used when reporting that something is absent.
 
 **Keep personal data out of the repo.** No real names or personal email addresses in
@@ -240,8 +246,11 @@ Two consequences that trip people up:
   **mandatory, not a convenience**: its `prepare` script is what sets `core.hooksPath` to
   `.husky/_`. Skip it and both hooks are simply absent, so any commit message shape is
   accepted and staged files are never linted. The failure is silent locally and only
-  surfaces when the `conventions` job fails on the PR. Verify with
-  `git config core.hooksPath`.
+  surfaces when the `conventions` job fails on the PR. Verify with `ls .husky/_`, not
+  `git config core.hooksPath`: the config value reads back the same whether or not the
+  directory it names exists, so it confirms the setting and never the hooks. A sibling
+  worktree is where the two come apart - it inherits the config without necessarily
+  carrying the directory.
 - Run app commands from inside that app's directory (`cd backend`, `cd frontend`). This
   matters for ESLint especially, whose config and plugins resolve from the app's own
   `node_modules`.

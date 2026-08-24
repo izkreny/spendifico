@@ -502,6 +502,25 @@ gotchas (colour arrives as `oklab`, headless starts light, `next/font` needs net
 does not reach the gated screens) and how to get story ids are all in
 `docs/agents/claude-tooling.md`.
 
+### The Blueprint MCP's findings are not evidence about this codebase
+
+The daisyUI Blueprint MCP is useful and its `quality_inspector` stage is the one to distrust.
+It is **composition-blind**: it reads a class list without the cascade, the theme layer or the
+component tree around it, so a finding can be accurate about the attribute and wrong about
+what renders. Verify every one of them against this file before editing on it.
+
+The false positives it produces here are false **because of the conventions above**, which is
+why this warning lives in this file rather than travelling with the tool. It flags semantic
+daisyUI colour as missing a literal palette value, when theme-aware colour is the rule; it
+flags the losing half of a modifier pair as dead when the whole point of _Where daisyUI and
+Tailwind fight_ is that the losing class is still in the attribute; and it reads the Expensa
+theme pair's `--color-*` remapping as a broken token reference. In another project those same
+findings might be real, so do not carry this conclusion to one.
+
+Follow the server's own sequencing and syntax verbatim - it is prescriptive - and end with
+the browser walk described above rather than with the inspector's verdict. Static analysis
+does not know what paints.
+
 ## Shared components
 
 `frontend/src/components/CLAUDE.md` is the authority: what earns a file there, the four `ui/`

@@ -96,6 +96,14 @@ ESLint and Prettier over staged files - and prints a reminder about the backend 
 running them. `npm run docs:check` has no hook at all. CI catches all of it on the pull request,
 which is a round trip rather than a safety net.
 
+**Hooks fire only where `.husky/_` exists, and the config value cannot tell you whether it does.**
+The root `npm install` sets `core.hooksPath` to `.husky/_`, and that setting reads back identically
+whether or not the directory is there - so `git config core.hooksPath` confirms the configuration
+and never the hooks. `ls .husky/_` is the check that distinguishes them. A sibling worktree is the
+case where the two disagree: it inherits the config and does not necessarily carry the directory, so
+a commit made there can skip `lint-staged` and `commitlint` entirely while the check you would think
+to run reports that hooks are installed.
+
 ## Branches, commits, pull requests and merges
 
 <!-- sync: docs/CONTRIBUTING.md -->

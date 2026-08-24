@@ -269,7 +269,9 @@ behind a pointer.
   and plugins from the app's own `node_modules`.
 - **The root `npm install` is mandatory, not a convenience**: its `prepare` script is what sets
   `core.hooksPath` to `.husky/_`. Skip it and both hooks are simply absent, silently, until the
-  `conventions` job fails on the PR. Verify with `git config core.hooksPath`.
+  `conventions` job fails on the PR. Verify with `ls .husky/_`, not `git config core.hooksPath`:
+  the config value reads back the same whether or not the directory it names exists, so it confirms
+  the setting and never the hooks.
 - **`npm run build` is the typecheck.** Neither app has a standalone `typecheck` script.
 
 **Safety and honesty**
@@ -283,7 +285,9 @@ behind a pointer.
   the browser bundle and is public forever.
 - **A search that is evidence of an absence has to reach dotfiles.** Use whatever tool you like,
   but a sweep that under-reports is indistinguishable from a clean one, and say which flags it
-  used: `rg -in --hidden PAT -g '!node_modules' -g '!.git/**' -g '!.env'`.
+  used: `rg -in --hidden --no-ignore PAT -g '!node_modules' -g '!.git/**' -g '!.env'`. **Both
+  coverage flags, not one.** `--hidden` reaches dotfiles and `--no-ignore` reaches gitignored ones;
+  a sweep carrying only the first reported clean while a real credential sat in a gitignored file.
 - **A ticket's acceptance criteria are amendable.** When an AC conflicts with a sounder design,
   weigh the engineering trade-off and recommend the better option, saying plainly that the ticket
   can be changed.

@@ -126,6 +126,44 @@ you re-create by registering again.
 
 `mise run reset` is that same delete, if you would rather not remember the path.
 
+### Running locally when you also have cloud credentials
+
+Once `backend/.env` carries the four `TURSO_*` variables, local work needs one deliberate
+step, because the repo is not consistent about them and cannot be.
+
+`mise run seed` and the showcase invite scripts **scrub** `TURSO_*` when they run in local
+mode, so they always act on local SQLite files. The dev server does **not**: it reads what
+the file gives it and connects to Turso Cloud. Run both with a cloud `.env` in place and you
+get a locally seeded database that the app you are looking at never reads, which presents as
+missing data rather than as a configuration mistake.
+
+So before local testing, move the file aside rather than editing it:
+
+```bash
+mv backend/.env backend/.env.cloud     # keep it; restore when you want cloud again
+cp backend/.env.example backend/.env   # local mode, no credentials
+```
+
+One related trap if you switch back and forth: `reset:cloud` recreates the central database,
+so any embedded-replica directory created before a reset carries history from a database that
+no longer exists and fails with "revision from future". Point `DATABASE_DIR` at a fresh
+directory after any reset. The seed can report success while its final push fails.
+
+### Template data and the seed guard
+
+The central database also holds template data - which starter categories onboarding offers,
+and which colours and icons a category may carry. The seeder is **guarded**: it skips any
+central database that has already been seeded.
+
+That guard is correct for repeated deploys and surprising the first time you change the
+template data, because **a deploy does not apply the change**. Editing the colour, icon or
+category seed and shipping it leaves the deployed app serving the old templates, with no
+error anywhere - the deploy succeeds, the seeder runs, and the guard declines. Applying it
+takes a deliberate step against the deployed central database.
+
+This has been missed silently twice. If you change any of that seed data, plan the manual
+step in the same change rather than after someone notices.
+
 ### Resetting everything to a clean state
 
 Test accounts accumulate as one Turso database per person plus rows in the central
