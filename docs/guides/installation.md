@@ -157,7 +157,7 @@ backend terminal instead of mailing it.
 
 `gh` is GitHub's official command-line tool. It is **optional** for building the project
 and **required** for anything involving pull requests from the terminal, including the
-`repo-review-prs` Claude Code skill.
+`github-pr-flow` Claude Code skill.
 
 Why bother instead of using the website: opening a PR becomes one command, and you never
 paste a personal access token anywhere, because `gh` stores an OAuth token in your OS

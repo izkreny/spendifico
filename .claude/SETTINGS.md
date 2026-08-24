@@ -45,9 +45,35 @@ click-throughed.
 command with `-X POST` writes to GitHub. Nothing in a permission pattern can tell those
 apart, so it is treated as a write.
 
+**`gh api *` is allowed outright, and that is a wider grant than it looks.** Answering a code
+review means one GraphQL read of every inline thread and one GraphQL mutation per reply, so a
+prompt per reply makes a review round unusable - eight findings meant eight approvals before
+this changed.
+
+**The obvious narrower rule was tried first and does not work.** Allowing `gh api graphql *`
+while leaving `gh api *` in `ask` looks like it grants exactly the review case and withholds the
+REST writes. It grants nothing: **`ask` overrides `allow`**, so a command matching both is asked
+about, and the allow rule is inert. The precedence is `deny` > `ask` > `allow`, and Claude Code
+says so in the prompt itself - "Ask rule `Bash(gh api *)` overrides auto mode for this command."
+
+Nor can the `ask` rule be narrowed to subtract GraphQL. Patterns match by prefix, so
+`Bash(gh api -X *)` catches `gh api -X DELETE repos/...` and misses `gh api repos/... -X DELETE`,
+which is the same command. There is no expressible middle: it is prompts on everything, or
+`gh api` allowed.
+
+**So this grant includes `-X DELETE`.** The one target worth naming is branch protection on
+`main` - `gh api -X DELETE repos/izkreny/spendifico/branches/main/protection` removes the gate
+that makes the "never push to `main`" rule real. Everything else `gh api` reaches is recoverable:
+repository settings flip back, labels rename back, comments delete. Judge the trade knowing that,
+rather than as a read-only convenience.
+
+`gh issue view`, `gh issue list` and `gh label list` are plain reads, and were prompting only
+because nothing listed them. They are now redundant beside `gh api *` in the sense that both
+reach GitHub, but they stay because they are the `gh` porcelain and say what they do.
+
 Setup instructions for `gh` itself, including which OAuth scopes matter, are in the
-`docs/guides/installation.md` section on the GitHub CLI. The `repo-review-prs` skill assumes it is already
-authenticated.
+`docs/guides/installation.md` section on the GitHub CLI. The `github-pr-flow` skill assumes it is
+already authenticated.
 
 ### `permissions.deny`
 
@@ -55,6 +81,47 @@ Never, not even with a prompt:
 
 - `rm -rf /`, `rm -rf ~`, `rm -rf .git*` - unrecoverable
 - `git push --force*`, `git push -f*` - rewrites history other people have pulled
+- `git push`, `git push origin main`, `git push origin HEAD:main` - the hard rule, given a
+  local barrier
+
+**Those three are a speed optimisation, not the gate.** `main` is a protected branch with
+`enforce_admins` on, so GitHub refuses a direct push from anyone including the owner. These
+patterns only move that refusal from a round trip to the API to an instant local one.
+
+**The two `gh api ... DELETE .../branches/main/protection` entries are a backstop, and a weak
+one by construction.** They exist because `gh api *` is allowed outright, which includes the one
+call that removes branch protection from `main` - the gate that makes "never push to `main`"
+enforceable rather than advisory. Both spellings of the flag are listed because `-X` and
+`--method` are the same thing to `gh` and different strings to a permission pattern.
+
+What they do not do is close the hole. Patterns match by prefix, so
+`gh api repos/izkreny/spendifico/branches/main/protection -X DELETE` - the identical call with
+the flag moved - matches neither entry. Treat them as a guard against the obvious spelling typed
+absent-mindedly, never as a control. The real protection against losing branch protection is that
+removing it is a deliberate act somebody has to mean.
+
+**The bare `git push` entry is the one that matters, and it is not redundant.** Claude Code
+matches a pattern without a trailing `*` exactly, so the two explicit spellings cover only
+themselves. The failure root `CLAUDE.md` actually records is different: HEAD silently moves to
+`main` mid-session, and the command typed then is a bare `git push` against an upstream that is
+now `main`. Denying it exactly is safe in a way a wildcard is not - `Bash(git push *)` would
+also block every legitimate push to a feature branch, and a pattern loose enough to catch
+`git push origin main --no-verify` would catch a branch whose name merely contains `main`.
+
+**That entry has a false positive worth knowing, because the way past it is a specific command.**
+It fires on the ordinary push of a feature branch that already has an upstream, not only on the
+accident it was added for. Nothing in the pattern can tell the two apart: at match time the string
+carries no branch name at all. The way through is the explicit form, which names its target and so
+cannot be the accident - `git push origin <branch>`. Reach for that rather than asking for the deny
+to be relaxed.
+
+**No `git push` pattern can be treated as an authorization boundary, because `git -C` walks around
+every one of them.** `git -C <path> push --force-with-lease ...` matches none of the entries above,
+for the mundane reason that the command does not begin with `git push`. That is a property of prefix
+matching, not a loophole anyone opened deliberately, and it means the deny list is a guard against
+the obvious spelling typed absent-mindedly rather than a control. **Never reach for `git -C`, or any
+other rephrasing, to get around a deny rule** - the rule is the decision, and the pattern is only
+how it is spelled.
 
 ### Why there is no `Read(**/.env)` deny rule
 
@@ -86,8 +153,9 @@ because a student who auto-approves from day one never looks at a diff.
 ### `attribution`
 
 Both fields are `""`, which suppresses the `Co-Authored-By: Claude` trailer on commits
-and the attribution line in PR bodies. The `/commit` skill asks for this in prose; this
-setting is what actually enforces it.
+and the attribution line in PR bodies. `docs/CONTRIBUTING.md` states the rule in prose -
+the AI disclaimer replaces the trailer rather than joining it - and this setting is what
+actually enforces it.
 
 > Note: the older `includeCoAuthoredBy` key does the same job but is deprecated. Use
 > `attribution`.

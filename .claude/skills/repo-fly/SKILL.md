@@ -19,6 +19,13 @@ would not need spelled out but an agent driving `flyctl` must know.
 Drive Fly through `flyctl` in Bash. The Fly MCP server was evaluated and declined for this
 project; do not re-evaluate or offer to install it.
 
+**The Turso MCP server is installed and this one is not, and the contrast is the reason rather
+than an inconsistency.** Turso's server earns its place because the CLI cannot do the job at all:
+it resolves database names against a stale local cache and therefore cannot address a
+backend-created user database. `flyctl` has no such gap - it reaches everything this project does
+on Fly - so an MCP server would add a second authenticated path to production for no capability
+the CLI lacks.
+
 ## Before you run anything
 
 - **`fly auth login` needs a real TTY and a browser.** An agent session cannot run it - it

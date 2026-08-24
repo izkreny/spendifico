@@ -1185,6 +1185,33 @@ registration never reaches the real user directory, is in `docs/guides/email.md`
 standing example being the `Accept: application/json` header that MailPace requires and
 Node's `fetch` does not send.
 
+### Running it outside CI: secrets, local mode, and the seed guard
+
+Three operational facts that bite when this backend is run by hand rather than by a test
+job. None of them is visible from the code, which is why they are here.
+
+**`backend/.env.local` is the source of truth for operator secrets**, and it is gitignored,
+so it is **absent from every worktree**. `MAILPACE_API_TOKEN` and `TURSO_API_TOKEN` live
+there - the second is the full-access Platform API token the reset needs and the app never
+uses, per `docs/guides/database.md`. A session working in a sibling worktree has to read the
+file from the main checkout; there is nothing to copy and nothing to regenerate. **Never
+print a value from it**, in a transcript or anywhere else.
+
+**Local testing runs in local mode, and the two halves of this repo disagree about that
+unless you make them agree.** The seed and invite scripts scrub the four `TURSO_*` variables
+when running locally; the dev server has no such guard. So a `backend/.env` carrying cloud
+credentials produces a seeded local database and a dev server talking to Turso Cloud, which
+looks like a caching bug and is not one. Move the file aside **up front** - to
+`.env.cloud` - rather than discovering the split halfway through a test.
+
+**A template-data seed change is not applied by a deploy.** The seed guard skips any central
+database that has already been seeded, so a change to the starter categories, the colour
+tokens or the icon names needs a deliberate step against the deployed central database.
+`docs/guides/database.md` carries the procedure; `backend/src/database/CLAUDE.md` is the
+authority for why that data lives centrally at all. This has been missed silently twice, and
+the failure mode is that nothing happens: the deploy succeeds and the templates are simply
+the old ones.
+
 ## The backend's half of CI
 
 The backend job covers the persistence layer without any Turso credentials: `test-e2e`

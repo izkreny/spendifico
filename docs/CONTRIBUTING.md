@@ -17,15 +17,34 @@ than just an instruction.
 
 Branch format: `{type}/GHI-{number}_{slug}`, for example
 `feat/GHI-160_user-profile-card`, where the number is the GitHub issue the branch serves.
-Commit messages carry the same key as a trailer: `(GHI-160)`.
+Commit headers name the same issue as `(#160)`, and carry no scope:
+`fix: reject a blank email (#160)`, all lowercase.
 
-**`GHI-` rather than `#160`, deliberately.** GitHub resolves a bare `#NN` in a commit message
-against whatever repository displays it, and this repository's history carries many such
-references that mean pull requests in the repository it was migrated from - so they resolve
-here, confidently and wrongly. `docs/migration/README.md` has the count and the detail.
-A prefixed key cannot collide with them in either direction. The one place a bare `#160` is
-correct is a **pull request body**, where `Closes #160` is read by GitHub itself and is what
-closes the issue on merge.
+**The scope lives on the pull request title, not on the branch commits.** A PR is titled
+`{type}({scope}): {issue title}`, all lowercase, where the scope is the issue's layer
+label and is dropped when it would repeat the type - `docs: ...`, never `docs(docs): ...`.
+GitHub builds the squash subject on `main` from that title plus `(#{pr-number})`, so it is
+the line that survives the merge. Putting a scope on the branch commits too would record it
+twice.
+
+**Merges are squash-only.** The branch's commits are working history; the squash subject and
+the PR body are the record. Step checklists live in the PR body and are ticked by whoever
+runs the gate; an issue's acceptance criteria are ticked by the implementer as each one
+verifiably lands.
+
+**Commit bodies carry the AI disclaimer and no `Co-Authored-By` trailer.** The disclaimer
+replaces the trailer rather than joining it.
+
+**`GHI-` and `#` each go where the other cannot.** A branch name and a plan filename cannot
+use `#`: it is hostile in a shell and in a path, and it links to nothing there, so `GHI-160`
+supplies the label a bare `160` would lack in `git branch -a`. A commit header and a PR body
+can use it, and should: `#160` resolves to the issue, and `Closes #160` in a **pull request
+body** is what GitHub itself acts on at merge.
+
+**A `#NN` in an inherited commit message means something else entirely.** Those predate this
+convention and refer to pull requests in the repository this one was migrated from, so they
+resolve here confidently and wrongly, and cannot be fixed without rewriting every SHA.
+`docs/migration/README.md` has the count and the detail.
 
 Branches cut before 2026-08-16 use the older `{type}/PET-{number}-{slug}` form, naming the Jira
 ticket that the issue was migrated from. Those are left as they are; the two forms coexist.
@@ -43,16 +62,25 @@ Recovery, if it happens anyway, is `git branch -f <feature> <sha>` and then
 `git status`, `git pull` and every later bare `git push` their reference point. Repair an
 already-pushed branch with `git branch --set-upstream-to=origin/<branch>`.
 
-**Stacked branches are not manually rebased. Ordinary branches are nobody's business but
-yours.** This repo uses GitHub's stacked branches feature routinely: a feature branch is
-often cut from an unmerged parent branch rather than from `main`
-(`feat/PET-14-link-verification-and-sessions` on top of
+**Stacked branches are restacked with `gh stack`, never with a raw `git rebase`. Ordinary
+branches are nobody's business but yours.** This repo uses GitHub's stacked branches
+feature routinely: a feature branch is often cut from an unmerged parent branch rather
+than from `main` (`feat/PET-14-link-verification-and-sessions` on top of
 `feat/PET-50-api-openapi-typegen`, for example), so the parent's PR merges first and
-GitHub retargets and restacks the child itself. A manual `git rebase` there is redundant
-and rewrites history the stack tooling is tracking, so open the PR against the parent, let
-GitHub do the restack, and use `gh stack rebase`/`sync` when a restack really is needed.
-New work that depends on an unmerged branch is cut from that branch's tip, not from
-`main`.
+GitHub retargets the child. Open the PR against the parent, and cut new work that depends
+on an unmerged branch from that branch's tip rather than from `main`.
+
+**Retargeting is not the whole job, because this repo squash-merges.** A squash replaces
+the parent's commits with one new commit on `main`, so the parent's originals stop being
+ancestors of `main` while the child still carries them. GitHub moves the child's base and
+nothing else, which leaves the child's diff showing the parent's changes as well as its
+own. The fix is `gh stack sync`, or `gh stack rebase` when a cascade is needed - run it
+after a parent lands, not before.
+
+**That is why the rule is "not by hand" rather than "never".** A raw `git rebase` rewrites
+history the stack tooling is tracking and desynchronises it; `gh stack` rewrites the same
+commits and keeps its own record straight. Squash-only merges make a restack routine
+rather than exceptional, so reach for the tool rather than avoiding the operation.
 
 **That restriction is about stacks only**, and it is the reason to check before assuming:
 `gh pr view <branch> --json baseRefName` names the PR's base, and a base other than `main`
@@ -72,14 +100,14 @@ and reserve `gh stack init` for branches not yet stacked anywhere. Finally, the 
 trap: `sync` and `rebase` rewrite every branch in the stack, git refuses to move a
 branch checked out in another worktree, and this repo routinely parks stack branches in
 `.claude/worktrees/*` - detach the other checkouts before a cascade rebase. The
-official `gh-stack` skill (committed at `.claude/skills/gh-stack/`) is the CLI manual;
-the repo's own `repo-stack` skill covers the wiring above.
+official `gh-stack` skill, installed at user scope rather than committed here, is the
+CLI manual; the `github-pr-flow` skill covers the wiring above.
 
 **Use the fewest commits that make sense, not one per task.** A plan's checklist is a list
 of tasks, not a list of commits: implementing six planned steps is free to land as one
 commit. Split only when a genuine reason exists - unrelated concerns in one working tree,
-or both apps changed for different reasons - which is the same test the `repo-commit`
-skill applies. The plan doc itself is the one standing exception, committed alone as the
+or both apps changed for different reasons. The plan doc itself is the one standing
+exception, committed alone as the
 branch's first commit so the draft PR can exist before any code does.
 
 ## What the hooks do

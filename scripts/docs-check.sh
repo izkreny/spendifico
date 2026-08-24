@@ -33,7 +33,7 @@ note() { echo "FAIL: $1" >>"$faults"; }
 # excluded from the doc sweeps, never from the code-derived assertions.
 docs() {
   git ls-files '*.md' |
-    grep -Ev '^(docs/plans/|docs/reviews/|\.agents/|\.claude/skills/(gh-stack|drizzle|backend-nestjs|frontend-nextjs))'
+    grep -Ev '^(docs/plans/|docs/reviews/|\.agents/skills/|\.claude/skills/(gh-stack|drizzle|backend-nestjs|frontend-nextjs))'
 }
 
 # ------------------------------------------------------------ 1. Node major
@@ -141,7 +141,7 @@ absent_by_design() {
   esac
 }
 for f in $(docs); do
-  grep -oE '`(backend|frontend|docs|scripts|\.claude|\.github|\.husky)/[A-Za-z0-9_./()-]+`' "$f" |
+  grep -oE '`(backend|frontend|docs|scripts|\.agents|\.claude|\.github|\.husky)/[A-Za-z0-9_./()-]+`' "$f" |
     tr -d '`' | sort -u | while read -r p; do
       case "$p" in *'*'* | */) continue ;; esac
       [ -e "$p" ] && continue

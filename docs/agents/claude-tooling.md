@@ -11,33 +11,44 @@ decision, because JSON cannot hold comments; this file does not restate them.
 **Skills.** A skill is invoked by its own name, so the slash command is the full name in
 the left column (`/repo-dev-setup`). You do not have to remember them: each skill's
 description also matches plain requests, so "set me up locally" reaches `repo-dev-setup`
-on its own. The short forms quoted inside the descriptions (`/dev-setup`, `/commit`) are
+on its own. The short forms quoted inside the descriptions (`/dev-setup`, `/secrets`) are
 matching phrases, not registered commands.
 
 | Skill             | What it does                                                                                                                                                             |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `repo-dev-setup`  | First-time local setup, both apps. Start here on a fresh clone                                                                                                           |
-| `repo-commit`     | Analyses changes, runs per-app lint/test, writes Conventional Commit messages, guards against committing to `main`                                                       |
 | `repo-secrets`    | Manages `.env` files from templates, explains where real secrets live                                                                                                    |
-| `repo-review-prs` | Fetches open PRs via `gh` and reviews unreviewed ones                                                                                                                    |
-| `repo-stack`      | This repo's stacked-branch wiring: the layers of truth, the worktree trap, the conventions. CLI mechanics live in the committed official `gh-stack` skill                |
 | `repo-fly`        | Driving the Fly.io deploy through `flyctl` in Bash: when it loads and the traps that bit the initial deploy. The runbook and config themselves live in `docs/guides/deployment.md` and `backend/fly.toml` |
 | `backend-nestjs`  | Passive reference library of NestJS rules, vendored from upstream. Consulted when writing backend code                                                                    |
 | `frontend-nextjs` | Passive reference library of Next.js/React rules, vendored from upstream. Consulted when writing frontend code                                                            |
 | `backend-drizzle` | How Drizzle and Turso are wired in **this** repo: the two migration scopes, the database-per-user consequences, the Turso drivers. Deliberately not a drizzle-kit manual |
 
-**Issue-tracker conventions live in `.claude/gh-issues.md`**, not in a skill. It records this
-repository's label set, what each axis asks, the default that is expressed by carrying no label,
-the milestones, and the mapping from a title's `[LAYER]` prefix to its label. There is no
-`repo-jira` skill any more: Jira stopped being the tracker on 2026-08-13 and its tooling was
-retired on 2026-08-16, so issue work is `gh` in Bash. The consumer of that file is a personal
-skill outside this repository, which is why nothing under `.claude/skills/` names it.
+**Tracker and pull-request conventions live in `.agents/github.md`**, not in a skill. It records
+this repository's label set, what each axis asks, the default that is expressed by carrying no
+label, the milestones, the issue title form, and the branch, commit, PR and merge forms. There is
+no `repo-jira` skill any more: Jira stopped being the tracker on 2026-08-13 and its tooling was
+retired on 2026-08-16, so issue work is `gh` in Bash.
 
-**Agents** (delegated subtasks with their own context): `code-reviewer`, `debugger`,
-`test-automator`, `nestjs-specialist` and `nextjs-specialist` (these two fetch and
-synthesise the live official docs, which is different from the passive rule libraries
-above), and `linus-reviewer` (a deliberately blunt review persona; it has no tools, so
-paste the diff into the prompt).
+**The file is named for its readers, and the name is load-bearing.** Two personal skills outside
+this repository read it - `github-solo-dev-repo` for the tracker and `github-pr-flow` for branches,
+pull requests and merges - and both look for `.agents/github.md` first, falling back to the same
+filename under `.claude/`. Its previous name, `gh-issues.md`, was read by neither, so the per-repo
+conventions it records were silently ignored. Each skill treats it as winning on every
+conflict with its own defaults. Nothing under `.claude/skills/` names it, because nothing in this
+repository consumes it.
+
+**Agents** (delegated subtasks with their own context): `nestjs-specialist` and
+`nextjs-specialist`. Both fetch and synthesise the live official docs, which is different from
+the passive rule libraries above, and both name these two apps - which is why they are the only
+two left here.
+
+Four are gone. `code-reviewer` is superseded by the review rules in the user's own `AGENTS.md`.
+`linus-reviewer`, `debugger` and `test-automator` moved to user scope rather than being retired:
+nothing about any of them was specific to this repository, so each now loads in every repository
+instead of one. `test-automator` was rewritten on the way out - its guidance named Jest, NestJS
+and React Testing Library throughout, which would have read as confidently wrong in a repository
+built on none of them, so it now reads the repository's own test setup before proposing
+anything.
 
 **Permissions.** `.claude/settings.json` is committed and applies to everyone. Notably,
 `Edit` and `Write` are **not** pre-approved, so Claude asks before every file change and
@@ -45,14 +56,11 @@ you see the diff before it lands. Every decision in that file is explained in
 `.claude/SETTINGS.md`, because JSON cannot hold comments. Personal preferences belong in
 `.claude/settings.local.json`, which is gitignored.
 
-**The `gh stack` CLI ships an official agent skill, and it is committed.**
-`.claude/skills/gh-stack/` comes from
-`gh skill install github/gh-stack gh-stack --agent claude-code --scope project`
-(`gh skill` is a preview feature of the GitHub CLI; the command needs both the repo and
-the skill name, or it only lists what is available). It is committed so everyone has a
-byte-identical copy and a fresh clone works with no extra step; refreshing it is a
-deliberate act - re-run the install and commit the diff. The repo's own `repo-stack`
-skill covers only this repo's stacked-branch wiring and defers the CLI to it.
+**The `gh stack` CLI ships an official agent skill, and this repo no longer vendors it.** It was
+committed here once, so that a fresh clone carried a byte-identical copy; it is now installed at
+user scope instead, pinned to the same tag and the same tree SHA, which made the committed copy
+redundant rather than merely duplicated. Stacked-branch work is covered by the user's
+`github-pr-flow` skill, which owns both the CLI mechanics and this repo's wiring.
 
 **Drizzle ships its own skills, and they are committed.** `drizzle-kit` bundles agent skills
 of its own (`drizzle`, `drizzle-generate`, `drizzle-migrations`, `drizzle-push`,
@@ -110,67 +118,32 @@ incorporation of main established, verified finding by finding:
   manual-check protocol demands that walk; treat the walk, not the findings list, as the
   stage's real value.
 
-**That walk runs in headless Chromium over the DevTools protocol, not through the
-claude-in-chrome extension.** Strongly prefer headless unless the request explicitly names the
-extension or the browser. `/usr/bin/chromium --headless=new --remote-debugging-port=N
---user-data-dir=<throwaway>`, then attach a flat session with `Target.attachToTarget` and drive
-it with `Runtime.evaluate`. Node's global `WebSocket` is enough, so this needs no Puppeteer, no
-Playwright and no dependency of any kind. Do not ask which browser to use.
+**That walk runs in headless Chromium over the DevTools protocol, and the method is not this
+repo's to state.** It lives at user scope, in the `browser-verification` skill: launching and
+attaching, why computed style and the accessibility tree are the evidence rather than a screenshot,
+why the pre-fix markup gets probed in the same run, and five gotchas met in practice. Do not ask
+which browser to use.
 
-The reason is not convenience. Every defect this class of check exists to find is **a class that
-is present in the markup and paints nothing** - `frontend/CLAUDE.md`'s Where daisyUI and Tailwind
-fight is the catalogue - and three things follow from that:
+What belongs here is the part that is only true of this app, and it is worth reading before writing
+a walk against it.
 
-- **Computed style and the accessibility tree are the evidence**, not a screenshot. Whether an
-  outline paints is `getComputedStyle(el).outlineStyle`; whether a control contradicts itself is
-  `Accessibility.getPartialAXTree`. Both are exact, and neither is a judgement call about a
-  picture.
-- **The pre-fix markup can be probed in the same run**, which is the part no manual walk gives
-  you. Clone the element, put the old classes back, read what the browser computes, and assert
-  the old value *fails* the check. PET-57's review fixes were verified with twelve such checks,
-  two of them proving the harness discriminates - the old dot still computes an opaque shadow
-  colour and the old drawer markup still reports `Open sidebar Close sidebar`. A check that has
-  never been seen to fail is not evidence.
-- **The script is the artifact.** It is reviewable, it reruns, and it does not depend on which
-  tab anybody has open.
-
-Five gotchas, all of them met in practice:
-
-- **Chromium reports colour as `oklab(L a b / A)`**, not `rgba()`. Matching `rgba(` produces a
-  false failure; match the alpha component generically instead.
-- **A colour check that only asks "did it paint" has not checked the colour.** This is the one
-  that has now cost three review findings across two tickets, so it is worth stating as a rule
-  rather than as a story. PET-64's walk verified that all twelve category chips painted a real
-  colour, that none was transparent, and that the twelve were mutually distinct - twenty-eight
-  green checks - and every one of those passed for a tile measuring 1.1:1 against the card it
-  sits on, because none of them ever looked at the card. **Measure the subject against the
-  surface behind it**, in both themes, and composite first: paint the fill over the background
-  on a 1x1 canvas and read the pixel back, since `getComputedStyle` reports a translucent colour
-  uncomposited and a WCAG ratio computed from that is a ratio for a colour nobody sees. Two
-  numbers make a good pair of controls, both already on record from independent runs: `base-300`
-  measures ~1.16:1 against `base-100` and must fail, and `base-content/50` measures ~3.4:1 light
-  and ~4.8:1 dark and must pass. A third worth knowing about: **a class Tailwind never compiled
-  reports a ratio of exactly 1.0**, indistinguishable from a colour identical to the background,
-  so a control that passes tells you the harness works *and* that the class exists.
-- **Headless starts in the light theme.** This app ships the Expensa pair selected by
-  `prefers-color-scheme` (PET-74), so anything theme-specific needs
-  `Emulation.setEmulatedMedia` - and a check that silently only ever ran in light is half a
-  check. The Settings Theme control can pin a theme instead, via a `data-theme` attribute the
-  root layout stamps from the `spendifico.theme` cookie; a walk of that path sets the attribute
-  or the cookie rather than emulating media.
-- **`next/font` fetches from Google at build time**, so with no network the fallback family
-  renders. Any check whose subject is a glyph is untrustworthy offline; the ₵ CEDI SIGN in
-  `ui/Sidebar.tsx`'s wordmark is the one this repo already flags for a human eye.
-- **Storybook is the cheap surface and it does not cover everything.** `npm run storybook` plus
+- **The defects a walk finds here are catalogued.** `frontend/CLAUDE.md`'s Where daisyUI and
+  Tailwind fight is the list of classes that are present in the markup and paint nothing, which is
+  the whole class of defect this check exists for.
+- **Two contrast controls, both on record from independent runs.** `base-300` measures ~1.16:1
+  against `base-100` and must **fail**; `base-content/50` measures ~3.4:1 light and ~4.8:1 dark and
+  must **pass**. A harness without a pair like this proves nothing about itself. A third case:
+  a class Tailwind never compiled reports exactly 1.0, so a passing control tells you the harness
+  works *and* that the class exists.
+- **This app ships the Expensa theme pair selected by `prefers-color-scheme` (PET-74)**, so a
+  theme-specific check needs `Emulation.setEmulatedMedia`. The Settings Theme control pins one
+  instead, through a `data-theme` attribute the root layout stamps from the `spendifico.theme`
+  cookie; a walk of that path sets the attribute or the cookie rather than emulating media.
+- **The ₵ CEDI SIGN in `ui/Sidebar.tsx`'s wordmark is the glyph this repo flags for a human eye**,
+  because `next/font` fetches from Google at build time and the fallback family renders offline.
+- **Storybook is the cheap surface and does not cover everything.** `npm run storybook` plus
   `iframe.html?viewMode=story&id=<id>` reaches every component and screen with no backend and no
-  session, and `index.json` lists the story ids. The four `(app)` screens are behind the session
+  session, and `index.json` lists the story ids. The four `(app)` screens sit behind the session
   gate, so reaching them headlessly means driving register, the emailed link and `/auth/verify`
-  first - possible, and much more setup than a component check needs.
-
-**Reach for the extension only when the task genuinely needs a human's browser**: an
-authenticated session on a third-party site, something the user wants to watch or take over
-mid-flow, or their saved logins. Verifying this app's own CSS and semantics is none of those.
-
-`.claude/commit-checks.md` is a generated cache read by `repo-commit`. Regenerate it
-with `/repo-commit refresh-checks` when it goes stale.
+  first - possible, and far more setup than a component check needs.
 

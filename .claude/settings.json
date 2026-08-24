@@ -27,7 +27,11 @@
       "Bash(gh pr view *)",
       "Bash(gh pr diff *)",
       "Bash(gh pr checks *)",
-      "Bash(gh repo view *)"
+      "Bash(gh repo view *)",
+      "Bash(gh issue view *)",
+      "Bash(gh issue list *)",
+      "Bash(gh label list *)",
+      "Bash(gh api *)"
     ],
     "ask": [
       "Bash(git push *)",
@@ -37,15 +41,19 @@
       "Bash(gh pr review *)",
       "Bash(gh pr comment *)",
       "Bash(gh pr merge *)",
-      "Bash(gh pr close *)",
-      "Bash(gh api *)"
+      "Bash(gh pr close *)"
     ],
     "deny": [
       "Bash(rm -rf /*)",
       "Bash(rm -rf ~*)",
       "Bash(rm -rf .git*)",
       "Bash(git push --force*)",
-      "Bash(git push -f*)"
+      "Bash(git push -f*)",
+      "Bash(git push)",
+      "Bash(git push origin main)",
+      "Bash(git push origin HEAD:main)",
+      "Bash(gh api -X DELETE repos/izkreny/spendifico/branches/main/protection)",
+      "Bash(gh api --method DELETE repos/izkreny/spendifico/branches/main/protection)"
     ]
   },
   "attribution": {
